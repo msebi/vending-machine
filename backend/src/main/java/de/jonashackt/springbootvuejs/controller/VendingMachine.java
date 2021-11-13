@@ -15,9 +15,9 @@ import de.jonashackt.springbootvuejs.exception.ProductNotFoundException;
 import de.jonashackt.springbootvuejs.repository.CashRepository;
 import de.jonashackt.springbootvuejs.repository.ProductRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class VendingMachine {
     /*
      * Vending machine logic;
@@ -60,8 +60,6 @@ public class VendingMachine {
      * stored to the cash
      */
 
-    private static final Logger LOG = LoggerFactory.getLogger(VendingMachine.class);
-
     private final int CENTS_5 = 5;
     private final int CENTS_10 = 10;
     private final int CENTS_20 = 20;
@@ -89,7 +87,7 @@ public class VendingMachine {
                     "Cannot have duplicate entries for the same product: " + defaultProduct.getProductName(), "FAILED");
         else if (initProduct.size() == 1) {
             Optional<Object> result = productRepository.findById(initProduct.get(0).getId()).map(product -> {
-                LOG.info("Restocking product with name " + initProduct.get(0).getProductName() + " from database.");
+                log.info("Restocking product with name " + initProduct.get(0).getProductName() + " from database.");
                 product.setProductPrice(defaultProduct.getProductPrice());
                 product.setProductQty(defaultProduct.getProductQty());
                 return product;
@@ -113,7 +111,7 @@ public class VendingMachine {
                     "FAILED");
         else if (initCash.size() == 1) {
             Optional<Object> result = cashRepository.findById(initCash.get(0).getId()).map(cashIt -> {
-                LOG.info("Restocking coins of type " + cashIt.getCoinType() + " from database.");
+                log.info("Restocking coins of type " + cashIt.getCoinType() + " from database.");
                 cashIt.setCoinCount(cash.getCoinCount());
                 return new StatusMsg("Initialized coins type: " + cashIt.getCoinType(), "SUCCESS");
             });
@@ -130,7 +128,7 @@ public class VendingMachine {
 
     // test only
     public StatusMsg initVendingMachineDefault() {
-        LOG.info("Initializing vending machine default ... ");
+        log.info("Initializing vending machine default ... ");
         StatusMsg statusMsg = null;
 
         statusMsg = initProduct(new Product("snickers", 50, 10));
@@ -349,23 +347,23 @@ public class VendingMachine {
 
     private void saveProductsAndCashToMem() {
         this.products.clear();
-        LOG.info("Products: ");
+        log.info("Products: ");
         for (Product product : productRepository.findAll()) {
             this.products.add(product);
-            LOG.info(product.toString());
+            log.info(product.toString());
         }
 
         this.cash.clear();
-        LOG.info("Cash: ");
+        log.info("Cash: ");
         for (Cash cash : cashRepository.findAll()) {
             this.cash.put(cash.getCoinType(), cash.getCoinCount());
-            LOG.info(cash.toString());
+            log.info(cash.toString());
         }
     }
 
     // returns change
     public Order purchase(Order order) {
-        LOG.info("Processing order ... ");
+        log.info("Processing order ... ");
 
         // get products and cash from db; work with in-memory models
         saveProductsAndCashToMem();

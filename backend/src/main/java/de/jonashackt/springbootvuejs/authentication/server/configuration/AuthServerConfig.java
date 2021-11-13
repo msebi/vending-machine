@@ -1,7 +1,6 @@
 package de.jonashackt.springbootvuejs.authentication.server.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,11 +15,10 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import de.jonashackt.springbootvuejs.authentication.server.configuration.properties.AppProperties;
 import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountService;
 
+@Slf4j
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AuthServerConfig.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,13 +37,13 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        LOG.info("Configure security");
+        log.info("Configure security");
         security.passwordEncoder(passwordEncoder);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        LOG.info("Configure clients");
+        log.info("Configure clients");
         clients.inMemory().withClient(appProperties.getClientId()).authorizedGrantTypes("password", "refresh_token")
                 .scopes("read", "write").secret("{noop}" + appProperties.getClientSecret())
                 .accessTokenValiditySeconds(6 * 10 * 60).refreshTokenValiditySeconds(6 * 10 * 60);
@@ -53,7 +51,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        LOG.info("Configure endpoints");
+        log.info("Configure endpoints");
         endpoints.pathMapping("/oauth/token", "/api/oauth/token").authenticationManager(authenticationManager)
                 .userDetailsService(accountService).tokenStore(tokenStore);
     }

@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/api")
 public class BackendController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(BackendController.class);
 
     public static final String HELLO_TEXT = "Hello from Spring Boot Backend!";
     public static final String SECURED_TEXT = "Hello from the secured resource!";
@@ -43,7 +41,7 @@ public class BackendController {
     @ResponseBody
     @RequestMapping(path = "/hello")
     public String sayHello() {
-        LOG.info("GET called on /hello resource");
+        log.info("GET called on /hello resource");
         return HELLO_TEXT;
     }
 
@@ -54,7 +52,7 @@ public class BackendController {
     @Transactional
     public User addNewUser(@RequestBody User user) {
         User savedUser = userRepository.save(new User(user.getFirstName(), user.getLastName()));
-        LOG.info(savedUser.toString() + " successfully saved into DB; firstName: " + savedUser.getFirstName()
+        log.info(savedUser.toString() + " successfully saved into DB; firstName: " + savedUser.getFirstName()
                 + " lastName: " + savedUser.getLastName());
         return savedUser;
     }
@@ -63,9 +61,9 @@ public class BackendController {
     @GetMapping(path = "/user/{id}")
     @Transactional
     public User getUserById(@PathVariable("id") long id) {
-        LOG.info("Reading user with id " + id + " from database.");
+        log.info("Reading user with id " + id + " from database.");
         return userRepository.findById(id).map(user -> {
-            LOG.info("Reading user with id " + id + " from database.");
+            log.info("Reading user with id " + id + " from database.");
             return user;
         }).orElseThrow(
                 () -> new UserNotFoundException("The user with the id " + id + " couldn't be found in the database."));
@@ -75,7 +73,7 @@ public class BackendController {
     @DeleteMapping(path = "/user/del/{id}")
     @Transactional
     public StatusMsg deleteUserById(@PathVariable("id") long id) {
-        LOG.info("Deleting user with id " + id + " from database.");
+        log.info("Deleting user with id " + id + " from database.");
         long noOfDeletedEntires = userRepository.removeById(id);
         if (noOfDeletedEntires == 1)
             return new StatusMsg("Deleted user with id: " + id, "SUCCESS");
@@ -91,7 +89,7 @@ public class BackendController {
     public Product addNewProduct(@RequestBody Product product) {
         Product savedProduct = productRepository
                 .save(new Product(product.getProductName(), product.getProductPrice(), product.getProductQty()));
-        LOG.info(savedProduct.toString() + " successfully saved into DB");
+        log.info(savedProduct.toString() + " successfully saved into DB");
         return savedProduct;
     }
 
@@ -100,7 +98,7 @@ public class BackendController {
     @Transactional
     public Product getProductById(@PathVariable("id") long id) {
         return productRepository.findById(id).map(product -> {
-            LOG.info("Reading product with id " + id + " from database.");
+            log.info("Reading product with id " + id + " from database.");
             return product;
         }).orElseThrow(() -> new ProductNotFoundException(
                 "The product with the id " + id + " couldn't be found in the database."));
@@ -111,7 +109,7 @@ public class BackendController {
     @Transactional
     public Product refillProductById(@PathVariable("id") long id, @PathVariable("productQty") int productQty) {
         return productRepository.findById(id).map(product -> {
-            LOG.info("Refilling product with id " + id + " from database.");
+            log.info("Refilling product with id " + id + " from database.");
             product.setProductQty(productQty + product.getProductQty());
             return product;
         }).orElseThrow(() -> new ProductNotFoundException(
@@ -176,7 +174,7 @@ public class BackendController {
     @ResponseBody
     @RequestMapping(path = "/secured", method = RequestMethod.GET)
     public String getSecured() {
-        LOG.info("GET successfully called on /secured resource");
+        log.info("GET successfully called on /secured resource");
         return SECURED_TEXT;
     }
 }
