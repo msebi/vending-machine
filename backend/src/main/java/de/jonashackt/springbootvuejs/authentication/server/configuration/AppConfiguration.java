@@ -1,4 +1,4 @@
-package authentication.server.configuration;
+package de.jonashackt.springbootvuejs.authentication.server.configuration;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import authentication.server.configuration.properties.AppProperties;
-import authentication.server.accounts.Account;
-import authentication.server.accounts.AccountRepository;
-import authentication.server.accounts.AccountRole;
-import authentication.server.accounts.AccountService;
+import de.jonashackt.springbootvuejs.authentication.server.configuration.properties.AppProperties;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.Account;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountRepository;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountRole;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountService;
 
 @Configuration
 public class AppConfiguration {

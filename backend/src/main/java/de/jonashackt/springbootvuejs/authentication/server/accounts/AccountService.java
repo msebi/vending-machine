@@ -1,4 +1,4 @@
-package authentication.server.accounts;
+package de.jonashackt.springbootvuejs.authentication.server.accounts;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

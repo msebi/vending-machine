@@ -1,4 +1,4 @@
-package authentication.server.configuration;
+package de.jonashackt.springbootvuejs.authentication.server.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,7 +13,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.anonymous().and().authorizeRequests().mvcMatchers(HttpMethod.GET, "/", "/api/home").permitAll()
+        http.anonymous().and().authorizeRequests()
+                .mvcMatchers(HttpMethod.GET, "/", "/api/home", "/favicon.ico", "/static/**", "/api/hello").permitAll()
                 .anyRequest().authenticated().and().exceptionHandling()
                 .accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

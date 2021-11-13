@@ -1,4 +1,4 @@
-package authentication.server.accounts;
+package de.jonashackt.springbootvuejs.authentication.server.accounts;
 
 import java.util.Collection;
 import java.util.Set;

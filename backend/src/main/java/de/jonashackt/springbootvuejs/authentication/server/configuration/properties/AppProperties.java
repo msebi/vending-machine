@@ -1,4 +1,4 @@
-package authentication.server.configuration.properties;
+package de.jonashackt.springbootvuejs.authentication.server.configuration.properties;
 
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;

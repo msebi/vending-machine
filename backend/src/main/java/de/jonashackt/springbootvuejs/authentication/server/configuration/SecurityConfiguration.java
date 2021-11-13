@@ -1,4 +1,4 @@
-package authentication.server.configuration;
+package de.jonashackt.springbootvuejs.authentication.server.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import authentication.server.accounts.AccountService;;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountService;;
 
 @Configuration
 @EnableWebSecurity
