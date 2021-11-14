@@ -1,5 +1,6 @@
 package de.jonashackt.springbootvuejs.authentication.server.accounts;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -37,5 +38,16 @@ public class Account {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<AccountRole> roles;
+    private Set<AccountRole> roles = new HashSet<AccountRole>();
+
+    public Account(String email, String password, Set<AccountRole> roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Account[id=%d, email='%s']", id, email);
+    }
 }

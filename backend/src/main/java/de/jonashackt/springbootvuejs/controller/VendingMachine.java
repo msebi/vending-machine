@@ -300,7 +300,7 @@ public class VendingMachine {
             Optional<Product> dbProduct = productRepository.findById(product.getId());
             if (!dbProduct.isPresent())
                 return false;
-            if (!product.getProductName().equalsIgnoreCase(dbProduct.getProductName()))
+            if (!product.getProductName().equalsIgnoreCase(dbProduct.get().getProductName()))
                 return false;
         }
         return true;

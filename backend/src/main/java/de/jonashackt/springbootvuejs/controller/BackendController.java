@@ -1,5 +1,8 @@
 package de.jonashackt.springbootvuejs.controller;
 
+import de.jonashackt.springbootvuejs.authentication.server.accounts.Account;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountNotFoundException;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountRepository;
 import de.jonashackt.springbootvuejs.domain.Order;
 import de.jonashackt.springbootvuejs.domain.Product;
 import de.jonashackt.springbootvuejs.domain.User;
@@ -8,7 +11,6 @@ import de.jonashackt.springbootvuejs.exception.ProductNotFoundException;
 import de.jonashackt.springbootvuejs.exception.UserNotFoundException;
 import de.jonashackt.springbootvuejs.repository.CashRepository;
 import de.jonashackt.springbootvuejs.repository.ProductRepository;
-import de.jonashackt.springbootvuejs.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public class BackendController {
     public static final String SECURED_TEXT = "Hello from the secured resource!";
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -50,31 +52,32 @@ public class BackendController {
     @RequestMapping(value = "/user/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public User addNewUser(@RequestBody User user) {
-        User savedUser = userRepository.save(new User(user.getFirstName(), user.getLastName()));
-        log.info(savedUser.toString() + " successfully saved into DB; firstName: " + savedUser.getFirstName()
-                + " lastName: " + savedUser.getLastName());
-        return savedUser;
+    public Account addNewAccount(@RequestBody Account account) {
+        Account savedAccount = accountRepository
+                .save(new Account(account.getEmail(), account.getPassword(), account.getRoles()));
+        log.info(savedAccount.toString() + " successfully saved into DB; email: " + savedAccount.getEmail() + " roles: "
+                + savedAccount.getRoles());
+        return savedAccount;
     }
 
     @ResponseBody
     @GetMapping(path = "/user/{id}")
     @Transactional
-    public User getUserById(@PathVariable("id") long id) {
+    public Account getAccountById(@PathVariable("id") long id) {
         log.info("Reading user with id " + id + " from database.");
-        return userRepository.findById(id).map(user -> {
+        return accountRepository.findById(id).map(account -> {
             log.info("Reading user with id " + id + " from database.");
-            return user;
-        }).orElseThrow(
-                () -> new UserNotFoundException("The user with the id " + id + " couldn't be found in the database."));
+            return account;
+        }).orElseThrow(() -> new AccountNotFoundException(
+                "The user with the id " + id + " couldn't be found in the database."));
     }
 
     @ResponseBody
     @DeleteMapping(path = "/user/del/{id}")
     @Transactional
-    public StatusMsg deleteUserById(@PathVariable("id") long id) {
+    public StatusMsg deleteAccountById(@PathVariable("id") long id) {
         log.info("Deleting user with id " + id + " from database.");
-        long noOfDeletedEntires = userRepository.removeById(id);
+        long noOfDeletedEntires = accountRepository.removeById(id);
         if (noOfDeletedEntires == 1)
             return new StatusMsg("Deleted user with id: " + id, "SUCCESS");
         else

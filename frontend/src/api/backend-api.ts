@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 
 const axiosApi = axios.create({
     baseURL: `/api`,
@@ -6,13 +6,13 @@ const axiosApi = axios.create({
     headers: { 'Content-Type': 'application/json' }
 });
 
-
 interface User {
     id: number;
-    firstName: string;
-    lastName: string;
-    role: string;
+    email: string;
+    password: string;
+    role: string[];
 }
+
 // Snack to be added/bought to the vending machine
 interface Product {
     id: number;
@@ -21,103 +21,59 @@ interface Product {
     productQty: number;
 }
 
-interface Amount {
-    id: number; // user id
-    firstName: string,
-    lastName: string,
-    amountAvailable: number;
+interface StatusMsg {
+    msg: string,
+    status: string
 }
 
-interface Purchase {
-    amountSpent: number;
-    products: Product[];
-    change: number;
+interface Deposit {
+    "5": number,
+    "10": number,
+    "20": number,
+    "50": number,
+    "100": number
 }
 
-// TODO:
-//      -- add confirmation messages for each call (failure/pass)
-//      -- coin types are validated server-side; possible values for a coin: 
-//          5, 10, 20, 50 and 100
-//      -- add enums for user roles and coin types 
+interface Order {
+    products: Product[]
+}
+
 export default {
     // CRUD users
-    createUser(firstName: string, lastName: string, role: string): Promise<AxiosResponse<User>> {
-        return axiosApi.post(`/user/create/` + firstName + '/' + lastName + '/' + role);
+    createUser(user: User, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.post<StatusMsg>('/user/create/', user, requestConfig);
     },
-    getUser(userId: number, user: string, password: string): Promise<AxiosResponse<User>> {
-        return axiosApi.get(`/user/` + userId, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    getUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<User>> {
+        return axiosApi.get<User>(`/user/` + userId, requestConfig);
     },
-    deleteUser(userId: number, user: string, password: string): Promise<AxiosResponse<number>> {
-        return axiosApi.post(`/user/del/` + userId, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    deleteUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.delete(`/user/del/` + userId, requestConfig);
     },
     // CRUD products
-    createProduct(productName: string, productPrice: number, productQty: number, user: string, password: string): Promise<AxiosResponse<Product>> {
-        return axiosApi.post(`/product/create/` + productName + '/' + productPrice + '/' + productQty, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    createProduct(product: Product, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.post<StatusMsg>('/product/create/', product, requestConfig);
     },
-    getProduct(productId: number, user: string, password: string): Promise<AxiosResponse<Product>> {
-        return axiosApi.post(`/product/` + productId, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    getProduct(productId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<Product>> {
+        return axiosApi.get<Product>(`/product/` + productId, requestConfig);
     },
-    refillProduct(productId: number, productQty: number, user: string, password: string): Promise<AxiosResponse<Product>> {
-        return axiosApi.post(`/product/refill/` + productId + '/' + productQty, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    refillProduct(product: Product, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.post<StatusMsg>('/product/refill/', product, requestConfig);
     },
-    delProduct(productId: number, user: string, password: string): Promise<AxiosResponse<number>> {
-        return axiosApi.post(`/product/del/` + productId, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    delProduct(productId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.post<StatusMsg>(`/product/del/` + productId, requestConfig);
     },
     // Purchases 
-    deposit(coin: number, user: string, password: string): Promise<AxiosResponse<Amount>> {
-        return axiosApi.post(`/deposit/` + coin, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    deposit(deposit: Deposit, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<Deposit>> {
+        return axiosApi.post<Deposit>('/deposit/', requestConfig);
     },
-    buy(productId: number, productCount: number, user: string, password: string): Promise<AxiosResponse<Purchase>> {
-        return axiosApi.post(`/buy/` + productId + '/' + productCount, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    buy(order: Order, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<Order>> {
+        return axiosApi.post<Order>('/buy/', order, requestConfig);
     },
-    reset(user: string, password: string): Promise<AxiosResponse<Amount>> {
-        return axiosApi.post(`/reset/` + user + '/' + password, {
-            auth: {
-                username: user,
-                password: password
-            }
-        });
+    reset(requestConfig: AxiosRequestConfig): Promise<AxiosResponse<StatusMsg>> {
+        return axiosApi.get('/reset/', requestConfig);
     },
+
+
     getSecured(user: string, password: string): Promise<AxiosResponse<string>> {
         return axiosApi.get(`/secured/`, {
             auth: {
