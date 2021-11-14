@@ -294,6 +294,18 @@ public class VendingMachine {
         return coinList;
     }
 
+    private boolean areThereTheRightProductsInVendingMachine(List<Product> products) {
+        for (Product product : products) {
+            boolean isProductInVendingMachine = true;
+            Optional<Product> dbProduct = productRepository.findById(product.getId());
+            if (!dbProduct.isPresent())
+                return false;
+            if (!product.getProductName().equalsIgnoreCase(dbProduct.getProductName()))
+                return false;
+        }
+        return true;
+    }
+
     private boolean areThereEnoughProductsInVendingMachine(List<Product> products) {
         for (Product product : products) {
             boolean isProductInStock = false;
@@ -374,6 +386,14 @@ public class VendingMachine {
 
         int totalProductsPrice = getTotalProductsPrice(order.getProducts());
         int totalDeposit = getAmountFromCoins(order.getDeposit());
+
+        // are the requested products in the vending machine?
+        if (!areThereTheRightProductsInVendingMachine(order.getProducts())) {
+            StatusMsg statusMsg = new StatusMsg(
+                    "Either the products were not found or there is a mismatch between their id and name", "FAILED");
+            // return unchanged deposit and no products; do not persist cash or products
+            return new Order(order.getProducts(), order.getDeposit(), statusMsg);
+        }
 
         // are there enough products in the vending machine?
         if (!areThereEnoughProductsInVendingMachine(order.getProducts())) {
