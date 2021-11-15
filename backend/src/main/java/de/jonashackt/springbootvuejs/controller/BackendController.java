@@ -52,12 +52,13 @@ public class BackendController {
     @RequestMapping(value = "/user/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public Account addNewAccount(@RequestBody Account account) {
+    public StatusMsg addNewAccount(@RequestBody Account account) {
         Account savedAccount = accountRepository
                 .save(new Account(account.getEmail(), account.getPassword(), account.getRoles()));
         log.info(savedAccount.toString() + " successfully saved into DB; email: " + savedAccount.getEmail() + " roles: "
                 + savedAccount.getRoles());
-        return savedAccount;
+
+        return new StatusMsg("Created user: " + savedAccount, "SUCCESS");
     }
 
     @ResponseBody
@@ -89,11 +90,12 @@ public class BackendController {
     @RequestMapping(value = "/product/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public Product addNewProduct(@RequestBody Product product) {
+    public StatusMsg addNewProduct(@RequestBody Product product) {
         Product savedProduct = productRepository
                 .save(new Product(product.getProductName(), product.getProductPrice(), product.getProductQty()));
         log.info(savedProduct.toString() + " successfully saved into DB");
-        return savedProduct;
+
+        return new StatusMsg("Successfully created product: " + product, "SUCCESS");
     }
 
     @ResponseBody
@@ -110,13 +112,14 @@ public class BackendController {
     @ResponseBody
     @GetMapping(path = "/product/refill/{id}/{productQty}")
     @Transactional
-    public Product refillProductById(@PathVariable("id") long id, @PathVariable("productQty") int productQty) {
-        return productRepository.findById(id).map(product -> {
+    public StatusMsg refillProductById(@PathVariable("id") long id, @PathVariable("productQty") int productQty) {
+        Product productRefil = productRepository.findById(id).map(product -> {
             log.info("Refilling product with id " + id + " from database.");
             product.setProductQty(productQty + product.getProductQty());
             return product;
         }).orElseThrow(() -> new ProductNotFoundException(
                 "Cannot refill; the product with the id " + id + " couldn't be found in the database."));
+        return new StatusMsg("Refilled product: " + productRefil, "SUCCESS");
     }
 
     @ResponseBody
@@ -166,12 +169,12 @@ public class BackendController {
 
     // purchase (no auth)
     @ResponseBody
-    @RequestMapping(value = "/product/purchase", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product/buy", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public Order makePurchase(@RequestBody Order order) {
+    public Order buy(@RequestBody Order order) {
         VendingMachine vendingMachine = new VendingMachine(productRepository, cashRepository);
-        return vendingMachine.purchase(order);
+        return vendingMachine.buy(order);
     }
 
     @ResponseBody

@@ -107,7 +107,7 @@ export default defineComponent({
       responseConfig: "",
       httpStatusCode: 0,
       httpStatusText: "",
-      headers: ["Noting here atm. Did you call the Service?"],
+      headers: ["Nothing here atm. Did you call the Service?"],
       errors: [],
     };
   },

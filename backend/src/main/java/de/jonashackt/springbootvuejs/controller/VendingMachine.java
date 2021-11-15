@@ -374,7 +374,7 @@ public class VendingMachine {
     }
 
     // returns change
-    public Order purchase(Order order) {
+    public Order buy(Order order) {
         log.info("Processing order ... ");
 
         // get products and cash from db; work with in-memory models
