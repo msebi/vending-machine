@@ -69,7 +69,7 @@ interface State {
 }
 
 export default defineComponent({
-  name: "Login",
+  name: "Vending Machine",
 
   data: (): State => {
     return {
@@ -80,20 +80,6 @@ export default defineComponent({
       errors: [],
     };
   },
-  methods: {
-    callLogin() {
-      this.errors = [];
-      this.$store
-        .dispatch("register", { user: this.email, password: this.password })
-        .then(() => {
-          this.$router.push("/login");
-        })
-        .catch((error: AxiosError) => {
-          this.registerError = true;
-          this.errors.push(error);
-          this.error = true;
-        });
-    },
-  },
+  methods: {},
 });
 </script>
