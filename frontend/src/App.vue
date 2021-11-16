@@ -1,15 +1,34 @@
 <template>
   <div id="nav">
-    <router-link to="/">Hello</router-link> |
+    <!-- <router-link to="/">Hello</router-link> | -->
     <!-- <router-link to="/callservice">Service</router-link> |
     <router-link to="/bootstrap">Bootstrap</router-link> | -->
-    <router-link to="/user">User</router-link> |
-    <router-link to="/login">Login</router-link> |
+    <!-- <router-link to="/user">User</router-link> | -->
+    <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">Logout</a>
+    <router-link to="/login" v-else>Login</router-link> |
     <router-link to="/register">Register</router-link> |
+    <!-- <router-link to="/vending-machine">Vending Machine</router-link> | -->
     <router-link to="/protected">Protected</router-link>
   </div>
   <router-view />
 </template>
+
+<script>
+import store from "./store/index";
+
+export default {
+  computed: {
+    isAuthenticated() {
+      return store.getters.isLoggedIn;
+    },
+  },
+  methods: {
+    onClickLogout() {
+      store.dispatch("logout").then(() => this.$router.push("/"));
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 #app {

@@ -1,24 +1,67 @@
-import { createStore } from 'vuex'
-import api from '../api/backend-api'
+import api, { axiosApi } from '../api/backend-api'
+import * as I from '../api/interfaces'
+import { InjectionKey } from 'vue'
+import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
-export default createStore({
+const enhanceAccessToken = () => {
+    const { accessToken } = localStorage;
+    if (!accessToken) {
+        return;
+    }
+
+    axiosApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+};
+
+enhanceAccessToken();
+
+interface State {
+    loginSuccess: boolean;
+    loginError: boolean;
+    logoutSuccess: boolean;
+    logoutError: boolean;
+    registerSuccess: boolean;
+    registerError: boolean;
+    userEmail: string;
+    userPass: string;
+    accessToken: string;
+    productsInVendingMachine: Array<I.Product>;
+    order: I.Order;
+}
+
+export const key: InjectionKey<Store<State>> = Symbol()
+
+export const store = createStore<State>({
     state: {
         loginSuccess: false,
         loginError: false,
+        logoutSuccess: false,
+        logoutError: false,
         registerSuccess: false,
         registerError: false,
-        userEmail: null,
-        userPass: null
+        userEmail: "",
+        userPass: "",
+        accessToken: "",
+        productsInVendingMachine: Array<I.Product>(),
+        order: 
     },
     mutations: {
         login_success(state, payload) {
             state.loginSuccess = true;
             state.userEmail = payload.userEmail;
             state.userPass = payload.userPass;
+            state.accessToken = payload.accessToken;
         },
         login_error(state, payload) {
             state.loginError = true;
             state.userEmail = payload.userEmail;
+        },
+        logout_success(state) {
+            state.accessToken = "";
+            state.logoutSuccess = true;
+            delete localStorage.accessToken;
+        },
+        logout_error(state) {
+            state.logoutSuccess = false;
         },
         register_success(state, payload) {
             state.registerSuccess = true;
@@ -33,22 +76,44 @@ export default createStore({
     actions: {
         login({ commit }, { userEmail, password }) {
             return new Promise((resolve, reject) => {
-                console.log("Accessing (log in) backend with user: '" + userEmail);
-                api.login(userEmail, password)
+                console.log("Accessing (log in) backend with user: " + userEmail);
+
+                const requestBody: I.UserLoginRequestBody = {
+                    username: userEmail,
+                    password: password,
+                    grant_type: 'password'
+                }
+
+                // auth contains the client id and client secret
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    auth: {
+                        username: 'myApp',
+                        password: 'pass'
+                    }
+                }
+
+                api.login(requestBody, config)
                     .then(response => {
-                        console.log("Response: '" + response.data + "' with Statuscode " + response.status);
+                        console.log("Response access token: '" + response.data.access_token + "' with Statuscode " + response.status);
                         if (response.status == 200) {
                             console.log("Login successful");
                             // place the loginSuccess state into our vuex store
                             commit('login_success', {
                                 userEmail: userEmail,
-                                userPass: password
+                                userPass: password,
+                                accessToken: response.data.access_token
                             });
+                            // set token
+                            console.log('Setting bearer token');
+                            axiosApi.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
                         }
                         resolve(response)
                     })
                     .catch(error => {
-                        console.log("Error: " + error);
+                        console.log("Error login: " + error);
                         // place the loginError state into our vuex store
                         commit('login_error', {
                             userEmail: userEmail
@@ -57,10 +122,29 @@ export default createStore({
                     })
             })
         },
+        logout({ commit }) {
+            return new Promise((resolve, reject) => {
+                console.log("Accessing (log out)");
+
+                api.logout().then(response => {
+                    console.log("Server response: " + response.data + " Statuscode: " + response.status);
+                    if (response.status == 200) {
+                        axiosApi.defaults.headers.common['Authorization'] = undefined;
+                        commit('logout_success');
+                    }
+                    resolve(response);
+                }).catch(error => {
+                    console.log("Error logout: " + error);
+                    // place the loginError state into our vuex store
+                    commit('logout_error');
+                    reject(error);
+                });
+            });
+        },
         register({ commit }, { userEmail, password }) {
             return new Promise((resolve, reject) => {
-                console.log("Accessing  backend with user: '" + userEmail);
-                api.login(userEmail, password)
+                console.log("Accessing (register) backend with user: '" + userEmail);
+                api.register(userEmail, password)
                     .then(response => {
                         console.log("Response: '" + response.data + "' with Statuscode " + response.status);
                         if (response.status == 200) {
@@ -85,11 +169,18 @@ export default createStore({
         },
     },
     getters: {
-        isLoggedIn: state => state.loginSuccess,
+        isLoggedIn: state => {
+            state.accessToken = state.accessToken || localStorage.accessToken
+            return state.accessToken
+        },
         hasLoginErrored: state => state.loginError,
         isRegistered: state => state.registerSuccess,
         hasRegisterErrored: state => state.registerError,
         getuserEmail: state => state.userEmail,
-        getUserPass: state => state.userPass
+        getUserPass: state => state.userPass,
     }
 });
+
+export function useStore() {
+    return baseUseStore(key)
+}

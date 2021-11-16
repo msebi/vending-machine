@@ -15,14 +15,14 @@
               class="form-inline justify-content-center"
             >
               <div class="form-group row mt-2">
-                <label for="user">User</label>
+                <label for="user">User email</label>
                 <input
                   type="user"
                   class="form-control"
-                  id="userId"
+                  id="userEmailId"
                   aria-describedby="userHelp"
-                  placeholder="Enter user"
-                  v-model="user"
+                  placeholder="Enter mail"
+                  v-model="userEmail"
                 />
               </div>
               <div class="form-group row mt-2">
@@ -62,7 +62,7 @@ import { AxiosError } from "axios";
 
 interface State {
   loginError: boolean;
-  user: string;
+  userEmail: string;
   password: string;
   error: boolean;
   errors: AxiosError[];
@@ -74,8 +74,8 @@ export default defineComponent({
   data: (): State => {
     return {
       loginError: false,
-      user: "",
-      password: "",
+      userEmail: "user@email.com",
+      password: "user",
       error: false,
       errors: [],
     };
@@ -83,10 +83,17 @@ export default defineComponent({
   methods: {
     callLogin() {
       this.errors = [];
+      console.log(
+        "logging in with user: " + this.userEmail + " pass: " + this.password
+      );
       this.$store
-        .dispatch("login", { user: this.user, password: this.password })
+        .dispatch("login", {
+          userEmail: this.userEmail,
+          password: this.password,
+        })
         .then(() => {
-          this.$router.push("/Protected");
+          console.log("Open vending machine");
+          this.$router.push("/vending-machine");
         })
         .catch((error: AxiosError) => {
           this.loginError = true;
