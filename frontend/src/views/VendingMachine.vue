@@ -76,7 +76,7 @@
 import { defineComponent } from "vue";
 import { AxiosError } from "axios";
 import store from "../store/index";
-import * as I from "../api/interfaces";
+import * as I from "../store/types";
 
 interface State {
   order: I.Order;

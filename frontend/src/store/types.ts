@@ -34,4 +34,19 @@ export interface Deposit {
 export interface Order {
     products: Product[];
     deposit: Deposit;
+    statusMsg: StatusMsg;
+}
+
+export interface VendingMachineState {
+    loginSuccess: boolean;
+    loginError: boolean;
+    logoutSuccess: boolean;
+    logoutError: boolean;
+    registerSuccess: boolean;
+    registerError: boolean;
+    userEmail: string;
+    userPass: string;
+    accessToken: string;
+    productsInVendingMachine: Array<Product>;
+    order: Order;
 }

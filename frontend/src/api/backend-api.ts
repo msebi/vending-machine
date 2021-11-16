@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import * as I from './interfaces';
+import * as I from '../store/types';
 import querystring from "querystring";
 
 export const axiosApi = axios.create({

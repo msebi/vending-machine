@@ -1,7 +1,9 @@
 import api, { axiosApi } from '../api/backend-api'
-import * as I from '../api/interfaces'
+import * as I from './types'
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
+import Vuex, { StoreOptions } from 'vuex';
+import { RootState } from './root-state'
 
 const enhanceAccessToken = () => {
     const { accessToken } = localStorage;
@@ -13,6 +15,8 @@ const enhanceAccessToken = () => {
 };
 
 enhanceAccessToken();
+
+
 
 interface State {
     loginSuccess: boolean;
@@ -29,6 +33,15 @@ interface State {
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
+
+const store: StoreOptions<RootState> = {
+    state: {
+        storeName: 'Vending machine v1.0.0'
+    },
+    modules: {
+        profile
+    }
+};
 
 export const store = createStore<State>({
     state: {
