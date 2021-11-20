@@ -4,7 +4,8 @@ import Register from '../views/Register.vue'
 import VendingMachine from '../views/VendingMachine.vue'
 import Protected from '../views/Protected.vue'
 
-import store from '../store'
+// import store from '../store'
+import { store } from '../store/index'
 
 const routes: Array<RouteRecordRaw> = [
     { path: '/', component: Login },
