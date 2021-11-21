@@ -4,7 +4,7 @@ import * as I from './types'
 import api, { axiosApi } from '../api/backend-api'
 
 @Module
-class PersonsModule extends VuexModule {
+class VendingMachineModule extends VuexModule {
     loginSuccess = false;
     loginError = false;
     logoutSuccess = false;
@@ -211,4 +211,4 @@ class PersonsModule extends VuexModule {
 }
 
 // Register the module and Create a proxy to it
-export default new PersonsModule({ store: modulesStore, name: "vending-machine-store" })
+export default new VendingMachineModule({ store: modulesStore, name: "vending-machine-store" })

@@ -61,13 +61,14 @@ import { AxiosError } from "axios";
 import { Vue, Component } from "vue-property-decorator";
 import VendingMachine from "../store/vending-machine";
 import * as I from "../store/types";
+import router from "../router/index";
 
 @Component
 class Login extends Vue {
   userEmail = "";
   userPassword = "";
 
-  callLogin() {
+  callLogin(): void {
     VendingMachine.clear_errors();
     console.log(
       "logging in with user: " + this.userEmail + " pass: " + this.userPassword
@@ -82,12 +83,11 @@ class Login extends Vue {
     VendingMachine.login(loginData)
       .then(() => {
         console.log("Open vending machine");
-        this.$router.push("/vending-machine");
+        router.push("/vending-machine");
       })
       .catch((error: AxiosError) => {
-        this.loginError = true;
-        this.errors.push(error);
-        this.error = true;
+        console.log("Err while logging in: " + error);
+        VendingMachine.login_error();
       });
   }
   // methods: {

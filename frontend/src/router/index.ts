@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-import VendingMachine from '../views/VendingMachine.vue'
+import VendingMachineView from '../views/VendingMachine.vue'
 import Protected from '../views/Protected.vue'
 
 // import store from '../store'
-import { store } from '../store/index'
+// import { store } from '../store/index'
+import VendingMachine from '../store/vending-machine'
 
 const routes: Array<RouteRecordRaw> = [
     { path: '/', component: Login },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/vending-machine', component: VendingMachine },
+    { path: '/vending-machine', component: VendingMachineView },
 
     {
         path: '/protected',
@@ -34,7 +35,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         // this route requires auth, check if logged in
         // if not, redirect to login page.
-        if (!store.getters.isLoggedIn) {
+        if (!VendingMachine.isLoggedIn) {
             next({
                 path: '/login'
             })
