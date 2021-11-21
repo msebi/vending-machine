@@ -73,54 +73,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import { AxiosError } from "axios";
-import store from "../store/index";
+import { Vue, Component } from "vue-property-decorator";
+import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
+import router from "../router/index";
 
-interface State {
-  order: I.Order;
-  buyError: boolean;
-  error: boolean;
-  errors: AxiosError[];
-}
-
-export default defineComponent({
-  name: "Vending Machine",
-
-  data: (): State => {
-    return {
-      order: {
-        products: [],
-        deposit: {
-          "5": 0,
-          "10": 0,
-          "20": 0,
-          "50": 0,
-          "100": 0,
-        },
-      },
-      buyError: false,
-      error: false,
-      errors: [],
-    };
-  },
-
-  created() {
-    console.log(
-      "propertyComputed will update, as this.property is now reactive."
-    );
-  },
-
-  computed: {
-    isAuthenticated() {
-      return store.getters.isLoggedIn;
-    },
-  },
-  methods: {
-    openLogin() {
-      this.$router.push("/");
-    },
-  },
-});
+@Component
+class VendingMachine extends Vue {}
 </script>
