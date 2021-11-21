@@ -32,7 +32,7 @@
                   class="form-control"
                   id="passwordId"
                   placeholder="Enter password"
-                  v-model="password"
+                  v-model="userPassword"
                 />
               </div>
 
@@ -57,50 +57,106 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import { AxiosError } from "axios";
+import { Vue, Component } from "vue-property-decorator";
+import VendingMachine from "../store/vending-machine";
+import * as I from "../store/types";
 
-interface State {
-  loginError: boolean;
-  userEmail: string;
-  password: string;
-  error: boolean;
-  errors: AxiosError[];
+@Component
+class Login extends Vue {
+  userEmail = "";
+  userPassword = "";
+
+  callLogin() {
+    VendingMachine.clear_errors();
+    console.log(
+      "logging in with user: " + this.userEmail + " pass: " + this.userPassword
+    );
+
+    const loginData: I.CredentialsLoginObject = {
+      userEmail: this.userEmail,
+      userPass: this.userPassword,
+      accessToken: "",
+    };
+
+    VendingMachine.login(loginData)
+      .then(() => {
+        console.log("Open vending machine");
+        this.$router.push("/vending-machine");
+      })
+      .catch((error: AxiosError) => {
+        this.loginError = true;
+        this.errors.push(error);
+        this.error = true;
+      });
+  }
+  // methods: {
+  //     callLogin() {
+  //       this.errors = [];
+  //       console.log(
+  //         "logging in with user: " + this.userEmail + " pass: " + this.password
+  //       );
+  //       this.$store
+  //         .dispatch("login", {
+  //           userEmail: this.userEmail,
+  //           password: this.password,
+  //         })
+  //         .then(() => {
+  //           console.log("Open vending machine");
+  //           this.$router.push("/vending-machine");
+  //         })
+  //         .catch((error: AxiosError) => {
+  //           this.loginError = true;
+  //           this.errors.push(error);
+  //           this.error = true;
+  //         });
+  //   }
+  // }
 }
 
-export default defineComponent({
-  name: "Login",
+export default Login;
 
-  data: (): State => {
-    return {
-      loginError: false,
-      userEmail: "user@email.com",
-      password: "user",
-      error: false,
-      errors: [],
-    };
-  },
-  methods: {
-    callLogin() {
-      this.errors = [];
-      console.log(
-        "logging in with user: " + this.userEmail + " pass: " + this.password
-      );
-      this.$store
-        .dispatch("login", {
-          userEmail: this.userEmail,
-          password: this.password,
-        })
-        .then(() => {
-          console.log("Open vending machine");
-          this.$router.push("/vending-machine");
-        })
-        .catch((error: AxiosError) => {
-          this.loginError = true;
-          this.errors.push(error);
-          this.error = true;
-        });
-    },
-  },
-});
+// interface State {
+//   loginError: boolean;
+//   userEmail: string;
+//   password: string;
+//   error: boolean;
+//   errors: AxiosError[];
+// }
+
+// export default defineComponent({
+//   name: "Login",
+
+//   data: (): State => {
+//     return {
+//       loginError: false,
+//       userEmail: "user@email.com",
+//       password: "user",
+//       error: false,
+//       errors: [],
+//     };
+//   },
+//   methods: {
+//     callLogin() {
+//       this.errors = [];
+//       console.log(
+//         "logging in with user: " + this.userEmail + " pass: " + this.password
+//       );
+//       this.$store
+//         .dispatch("login", {
+//           userEmail: this.userEmail,
+//           password: this.password,
+//         })
+//         .then(() => {
+//           console.log("Open vending machine");
+//           this.$router.push("/vending-machine");
+//         })
+//         .catch((error: AxiosError) => {
+//           this.loginError = true;
+//           this.errors.push(error);
+//           this.error = true;
+//         });
+//     },
+//   },
+// });
 </script>

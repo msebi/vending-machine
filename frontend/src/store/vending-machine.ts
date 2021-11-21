@@ -56,6 +56,13 @@ class PersonsModule extends VuexModule {
     }
 
     @Mutation
+    clear_errors() {
+        this.loginError = false;
+        this.logoutError = false;
+        this.registerError = false;
+    }
+
+    @Mutation
     login_success(payload: I.CredentialsLoginObject) {
         this.loginSuccess = true;
         this.accessToken = payload.accessToken;
