@@ -9,17 +9,18 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">$</th>
+                  <th scope="col">Left</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr v-for="product in products" :key="product.id">
                   <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+                  <td>{{ product.id }}</td>
+                  <td>{{ product.productName }}</td>
+                  <td>{{ product.productPrice }}</td>
+                  <td>{{ product.productQty }}</td>
                 </tr>
               </tbody>
             </table>
@@ -73,12 +74,24 @@
 </template>
 
 <script lang="ts">
-import { AxiosError } from "axios";
 import { Vue, Component } from "vue-property-decorator";
 import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
-import router from "../router/index";
 
 @Component
-class VendingMachine extends Vue {}
+class VendingMachine extends Vue {
+  products: I.Product[] = [];
+
+  // TODO: do we need async here
+  created() {
+    VendingMachineStore.getProductsAction()
+      .then(() => {
+        this.products = VendingMachineStore.getProductsGetter;
+      })
+      .catch((error) => {
+        console.log("Failed to get products: " + error);
+      });
+  }
+}
+export default VendingMachine;
 </script>

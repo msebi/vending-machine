@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import * as I from '../store/types';
 import querystring from "querystring";
 
@@ -36,6 +36,9 @@ export default {
     },
     getProduct(productId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.Product>> {
         return axiosApi.get<I.Product>(`/product/` + productId, requestConfig);
+    },
+    getProducts(): Promise<AxiosResponse<I.Product[]>> {
+        return axiosApi.get<I.Product[]>('/product/get-products');
     },
     refillProduct(product: I.Product, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
         return axiosApi.post<I.StatusMsg>('/product/refill', product, requestConfig);

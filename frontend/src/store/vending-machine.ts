@@ -55,6 +55,10 @@ class VendingMachineModule extends VuexModule {
         return this.userPass;
     }
 
+    get getProductsGetter() {
+        return this.productsInVendingMachine;
+    }
+
     @Mutation
     clear_errors() {
         this.loginError = false;
@@ -93,6 +97,11 @@ class VendingMachineModule extends VuexModule {
     @Mutation
     register_error() {
         this.registerError = true;
+    }
+
+    @Mutation
+    set_products(productsInVendingMachine: I.Product[]) {
+        this.productsInVendingMachine = productsInVendingMachine;
     }
 
     @Action
@@ -169,7 +178,7 @@ class VendingMachineModule extends VuexModule {
     @Action
     async register(registerObject: I.UserRegisterRequestBody) {
         return new Promise((resolve, reject) => {
-            console.log("Accessing (register) backend with user: '" + registerObject.userEmail);
+            console.log("Accessing (register) backend with user: " + registerObject.userEmail);
             api.register(registerObject)
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
@@ -185,6 +194,29 @@ class VendingMachineModule extends VuexModule {
                     // place the registerError state into our vuex store
                     this.register_error();
                     reject("Failed to register!")
+                })
+        })
+    }
+
+    @Action
+    async getProductsAction() {
+        return new Promise((resolve, reject) => {
+            console.log("Fetching products");
+            api.getProducts()
+                .then(response => {
+                    console.log("Response: '" + response.data + "' with Statuscode " + response.status);
+                    if (response.status == 200) {
+                        console.log("Got products");
+                        // place the registerSuccess state into our vuex store
+                        this.set_products(response.data)
+                    }
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log("Error: " + error);
+                    // place the registerError state into our vuex store
+                    this.register_error();
+                    reject("Couldn't get products!")
                 })
         })
     }
