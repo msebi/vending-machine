@@ -1,7 +1,32 @@
 export interface UserLoginRequestBody {
-    username: string;
-    password: string;
+    userEmail: string;
+    userPass: string;
     grant_type: string;
+}
+
+export interface UserRegisterRequestBody {
+    userEmail: string;
+    userPass: string;
+}
+
+export interface CredentialsRegisterObject {
+    userEmail: string;
+    userPass: string;
+}
+
+export interface CredentialsLoginObject {
+    userEmail: string;
+    userPass: string;
+    accessToken: string;
+}
+
+export interface CredentialsStatusObject {
+    loginSuccess: boolean;
+    loginError: boolean;
+    logoutSuccess: boolean;
+    logoutError: boolean;
+    registerSuccess: boolean;
+    registerError: boolean;
 }
 export interface User {
     id?: number;
