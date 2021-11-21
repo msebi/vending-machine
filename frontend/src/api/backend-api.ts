@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import * as I from '../store/types';
 import querystring from "querystring";
+import { CredentialsObject } from '../store/types';
 
 export const axiosApi = axios.create({
     baseURL: `/api`,
@@ -11,9 +12,9 @@ export const axiosApi = axios.create({
 
 export default {
     // login/out
-    login(requestBody: any, requestConfig: AxiosRequestConfig): Promise<AxiosResponse> {
-        console.log('login requestBody: ' + querystring.stringify(requestBody));
-        return axiosApi.post('/oauth/token', querystring.stringify(requestBody), requestConfig);
+    login(userDetails: CredentialsObject, requestConfig: AxiosRequestConfig): Promise<AxiosResponse> {
+        console.log('login requestBody: ' + querystring.stringify(userDetails));
+        return axiosApi.post('/oauth/token', querystring.stringify(userDetails), requestConfig);
     },
     logout(): Promise<AxiosResponse<I.StatusMsg>> {
         console.log('logout');
@@ -21,8 +22,9 @@ export default {
         return axiosApi.post('/user/logout');
     },
     // CRUD users
-    register(user: I.User, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
-        return axiosApi.post<I.StatusMsg>('/user/create', user, requestConfig);
+    register(requestBody: any, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
+        console.log('login requestBody: ' + querystring.stringify(requestBody));
+        return axiosApi.post<I.StatusMsg>('/user/create', querystring.stringify(requestBody), requestConfig);
     },
     getUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.User>> {
         return axiosApi.get<I.User>(`/user/` + userId, requestConfig);
