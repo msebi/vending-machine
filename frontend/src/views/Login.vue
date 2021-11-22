@@ -114,8 +114,6 @@ class Login extends Vue {
   // }
 }
 
-export default Login;
-
 // interface State {
 //   loginError: boolean;
 //   userEmail: string;
