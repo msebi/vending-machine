@@ -74,11 +74,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
+// import { Vue, Component } from "vue-property-decorator";
 import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
 
-@Component
+@Options({
+  name: "VendingMachine",
+})
 export default class VendingMachine extends Vue {
   products: I.Product[] = [];
 

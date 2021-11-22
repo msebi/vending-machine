@@ -13,18 +13,19 @@
   <router-view />
 </template>
 
-<script>
-import store from "./store/index";
+<script lang="ts">
+import VendingMachine from "./store/vending-machine";
+import router from "./router/index";
 
 export default {
   computed: {
-    isAuthenticated() {
-      return store.getters.isLoggedIn;
+    isAuthenticated(): string {
+      return VendingMachine.isLoggedIn;
     },
   },
   methods: {
-    onClickLogout() {
-      store.dispatch("logout").then(() => this.$router.push("/"));
+    onClickLogout(): void {
+      VendingMachine.logout().then(() => router.push("/"));
     },
   },
 };

@@ -58,12 +58,14 @@
 
 <script lang="ts">
 import { AxiosError } from "axios";
-import { Vue, Component } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
 import VendingMachine from "../store/vending-machine";
 import * as I from "../store/types";
 import router from "../router/index";
 
-@Component
+@Options({
+  name: "Login",
+})
 export default class Login extends Vue {
   userEmail = "";
   userPassword = "";
