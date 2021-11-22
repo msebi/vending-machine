@@ -64,7 +64,7 @@ import * as I from "../store/types";
 import router from "../router/index";
 
 @Component
-class Login extends Vue {
+export default class Login extends Vue {
   userEmail = "";
   userPassword = "";
 

@@ -57,43 +57,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import { AxiosError } from "axios";
+import { Vue, Component } from "vue-property-decorator";
+import VendingMachine from "../store/vending-machine";
+import * as I from "../store/types";
+import router from "../router/index";
 
-interface State {
-  registerError: boolean;
-  email: string;
-  password: string;
-  error: boolean;
-  errors: AxiosError[];
-}
+@Component
+export default class Register extends Vue {
+  userEmail = "";
+  userPassword = "";
 
-export default defineComponent({
-  name: "Login",
+  callRegister(): void {
+    VendingMachine.clear_errors();
+    console.log(
+      "registering user: " + this.userEmail + " pass: " + this.userPassword
+    );
 
-  data: (): State => {
-    return {
-      registerError: false,
-      email: "",
-      password: "",
-      error: false,
-      errors: [],
+    const registerData: I.CredentialsRegisterObject = {
+      userEmail: this.userEmail,
+      userPass: this.userPassword,
     };
-  },
-  methods: {
-    callLogin() {
-      this.errors = [];
-      this.$store
-        .dispatch("register", { user: this.email, password: this.password })
-        .then(() => {
-          this.$router.push("/login");
-        })
-        .catch((error: AxiosError) => {
-          this.registerError = true;
-          this.errors.push(error);
-          this.error = true;
-        });
-    },
-  },
-});
+
+    VendingMachine.register(registerData)
+      .then(() => {
+        console.log("Open login page");
+        router.push("/login");
+      })
+      .catch((error: AxiosError) => {
+        console.log("Err while registering: " + error);
+        VendingMachine.register_error();
+      });
+  }
+}
 </script>

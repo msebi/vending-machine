@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import VendingMachineView from '../views/VendingMachine.vue'
-import Protected from '../views/Protected.vue'
 
 // import store from '../store'
 // import { store } from '../store/index'
@@ -14,13 +13,13 @@ const routes: Array<RouteRecordRaw> = [
     { path: '/register', component: Register },
     { path: '/vending-machine', component: VendingMachineView },
 
-    {
-        path: '/protected',
-        component: Protected,
-        meta: {
-            requiresAuth: true
-        }
-    },
+    // {
+    //     path: '/protected',
+    //     component: Protected,
+    //     meta: {
+    //         requiresAuth: true
+    //     }
+    // },
 
     // otherwise redirect to home
     { path: '/:pathMatch(.*)*', redirect: '/' }

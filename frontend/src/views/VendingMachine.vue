@@ -79,7 +79,7 @@ import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
 
 @Component
-class VendingMachine extends Vue {
+export default class VendingMachine extends Vue {
   products: I.Product[] = [];
 
   // TODO: do we need async here
@@ -93,5 +93,4 @@ class VendingMachine extends Vue {
       });
   }
 }
-export default VendingMachine;
 </script>
