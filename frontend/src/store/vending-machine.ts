@@ -31,8 +31,8 @@ class VendingMachineModule extends VuexModule {
     };
 
     get isLoggedIn() {
-        this.accessToken = this.accessToken || localStorage.accessToken
-        return this.accessToken
+        // this.accessToken = this.accessToken || localStorage.accessToken
+        return this.accessToken || localStorage.accessToken;
     }
 
     get hasLoginErrored() {
@@ -70,6 +70,7 @@ class VendingMachineModule extends VuexModule {
     login_success(payload: I.CredentialsLoginObject) {
         this.loginSuccess = true;
         this.accessToken = payload.accessToken;
+        localStorage.accessToken = payload.accessToken;
     }
 
     @Mutation

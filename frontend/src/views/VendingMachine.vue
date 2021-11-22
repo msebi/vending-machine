@@ -86,7 +86,7 @@ export default class VendingMachine extends Vue {
   products: I.Product[] = [];
 
   // TODO: do we need async here
-  created() {
+  created(): void {
     VendingMachineStore.getProductsAction()
       .then(() => {
         this.products = VendingMachineStore.getProductsGetter;

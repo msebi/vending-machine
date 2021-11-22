@@ -19,8 +19,9 @@ import router from "./router/index";
 
 export default {
   computed: {
-    isAuthenticated(): string {
-      return VendingMachine.isLoggedIn;
+    isAuthenticated(): boolean {
+      if (VendingMachine.isLoggedIn) return true;
+      return false;
     },
   },
   methods: {
