@@ -22,7 +22,7 @@
                   id="userEmailId"
                   aria-describedby="userHelp"
                   placeholder="Enter mail"
-                  v-model="userEmail"
+                  v-model="username"
                 />
               </div>
               <div class="form-group row mt-2">
@@ -32,7 +32,7 @@
                   class="form-control"
                   id="passwordId"
                   placeholder="Enter password"
-                  v-model="userPassword"
+                  v-model="passowrd"
                 />
               </div>
 
@@ -67,18 +67,18 @@ import router from "../router/index";
   name: "Login",
 })
 export default class Login extends Vue {
-  userEmail = "user@email.com";
-  userPassword = "user";
+  username = "user@email.com";
+  password = "user";
 
   callLogin(): void {
     VendingMachine.clear_errors();
     console.log(
-      "logging in with user: " + this.userEmail + " pass: " + this.userPassword
+      "logging in with user: " + this.username + " pass: " + this.password
     );
 
     const loginData: I.CredentialsLoginObject = {
-      userEmail: this.userEmail,
-      userPass: this.userPassword,
+      username: this.username,
+      password: this.password,
       accessToken: "",
     };
 

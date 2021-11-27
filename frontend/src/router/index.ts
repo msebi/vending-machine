@@ -5,7 +5,7 @@ import VendingMachineView from '../views/VendingMachine.vue'
 
 // import store from '../store'
 // import { store } from '../store/index'
-import VendingMachine from '../store/vending-machine'
+import VendingMachineStore from '../store/vending-machine'
 
 const routes: Array<RouteRecordRaw> = [
     { path: '/', component: Login },
@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         // this route requires auth, check if logged in
         // if not, redirect to login page.
-        if (VendingMachine.isLoggedIn !== "") {
+        if (VendingMachineStore.isLoggedIn) {
             next({
                 path: '/login'
             })

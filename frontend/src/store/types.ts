@@ -5,18 +5,18 @@ export interface UserLoginRequestBody {
 }
 
 export interface UserRegisterRequestBody {
-    userEmail: string;
-    userPass: string;
+    username: string;
+    password: string;
 }
 
 export interface CredentialsRegisterObject {
-    userEmail: string;
-    userPass: string;
+    username: string;
+    password: string;
 }
 
 export interface CredentialsLoginObject {
-    userEmail: string;
-    userPass: string;
+    username: string;
+    password: string;
     accessToken: string;
 }
 
@@ -69,8 +69,8 @@ export interface VendingMachineState {
     logoutError: boolean;
     registerSuccess: boolean;
     registerError: boolean;
-    userEmail: string;
-    userPass: string;
+    username: string;
+    password: string;
     accessToken: string;
     productsInVendingMachine: Array<Product>;
     order: Order;

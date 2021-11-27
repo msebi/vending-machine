@@ -44,7 +44,6 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-// import { Vue, Component } from "vue-property-decorator";
 import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
 
@@ -53,6 +52,10 @@ import * as I from "../store/types";
 })
 export default class VendingMachine extends Vue {
   products: I.Product[] = [];
+
+  get isAuthenticated(): boolean {
+    return VendingMachineStore.isLoggedIn;
+  }
 
   // TODO: do we need async here
   created(): void {

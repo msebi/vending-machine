@@ -14,6 +14,7 @@ export default {
         return axiosApi.get('/hello');
     },
     login(userDetails: I.UserLoginRequestBody, requestConfig: AxiosRequestConfig): Promise<AxiosResponse> {
+        // TODO: remove consoles
         console.log('login requestBody: ' + querystring.stringify({ ...userDetails }));
         console.log('login requestConfig: ' + JSON.stringify(requestConfig));
         return axiosApi.post('/oauth/token', querystring.stringify({ ...userDetails }), requestConfig);

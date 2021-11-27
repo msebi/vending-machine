@@ -68,18 +68,18 @@ import router from "../router/index";
   name: "Register",
 })
 export default class Register extends Vue {
-  userEmail = "";
-  userPassword = "";
+  username = "";
+  password = "";
 
   callRegister(): void {
     VendingMachine.clear_errors();
     console.log(
-      "registering user: " + this.userEmail + " pass: " + this.userPassword
+      "registering user: " + this.username + " pass: " + this.password
     );
 
     const registerData: I.CredentialsRegisterObject = {
-      userEmail: this.userEmail,
-      userPass: this.userPassword,
+      username: this.username,
+      password: this.password,
     };
 
     VendingMachine.register(registerData)

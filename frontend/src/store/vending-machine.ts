@@ -31,8 +31,14 @@ class VendingMachineModule extends VuexModule {
         }
     };
 
-    get isLoggedIn() {
-        // this.accessToken = this.accessToken || localStorage.accessToken
+    get isLoggedIn(): boolean {
+        console.log("isLoggedIn accessToken: " + this.accessToken)
+        console.log("isLoggedIn " + !this.accessToken || this.accessToken.length === 0)
+        if (this.accessToken || this.accessToken.length === 0) return false;
+        return true;
+    }
+
+    get getAccessToken() {
         return this.accessToken || localStorage.accessToken;
     }
 
@@ -109,11 +115,11 @@ class VendingMachineModule extends VuexModule {
     @Action
     async login(loginObject: I.CredentialsLoginObject) {
         return new Promise((resolve, reject) => {
-            console.log("Accessing (log in) backend with user: " + loginObject.userEmail);
+            console.log("Accessing (log in) backend with user: " + loginObject.username);
 
             const requestBody: I.UserLoginRequestBody = {
-                username: loginObject.userEmail,
-                password: loginObject.userPass,
+                username: loginObject.username,
+                password: loginObject.password,
                 grant_type: 'password'
             }
 
@@ -135,8 +141,8 @@ class VendingMachineModule extends VuexModule {
                         console.log("Login successful");
 
                         const loginPayload: I.CredentialsLoginObject = {
-                            userEmail: "",
-                            userPass: "",
+                            username: "",
+                            password: "",
                             accessToken: response.data.access_token
                         };
 
@@ -180,7 +186,7 @@ class VendingMachineModule extends VuexModule {
     @Action
     async register(registerObject: I.UserRegisterRequestBody) {
         return new Promise((resolve, reject) => {
-            console.log("Accessing (register) backend with user: " + registerObject.userEmail);
+            console.log("Accessing (register) backend with user: " + registerObject.username);
             api.register(registerObject)
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
