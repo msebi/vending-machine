@@ -24,37 +24,6 @@
                 </tr>
               </tbody>
             </table>
-            <!-- <form
-              @submit.prevent="buy()"
-              class="form-inline justify-content-center"
-            >
-              <div class="form-group row mt-2">
-                <label for="email">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="emailId"
-                  aria-describedby="emailHelp"
-                  placeholder="Enter email"
-                  v-model="email"
-                />
-              </div>
-              <div class="form-group row mt-2">
-                <label for="password">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="passwordId"
-                  placeholder="Enter password"
-                  v-model="password"
-                />
-              </div>
-
-              <button type="submit" class="btn btn-primary row mt-2">
-                Register
-              </button>
-              <p v-if="error" class="error">Bad login information</p>
-            </form> -->
           </div>
           <div v-else>
             Not logged in!

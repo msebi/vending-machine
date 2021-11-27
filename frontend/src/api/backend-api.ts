@@ -21,7 +21,7 @@ export default {
     logout(): Promise<AxiosResponse<I.StatusMsg>> {
         console.log('logout');
         // clear deposit if any
-        return axios.post('/logout');
+        return axiosApi.post('/logout');
     },
     // CRUD users
     register(requestBody: I.UserRegisterRequestBody): Promise<AxiosResponse<I.StatusMsg>> {
