@@ -10,14 +10,18 @@ export const axiosApi = axios.create({
 
 
 export default {
+    hello(): Promise<AxiosResponse> {
+        return axiosApi.get('/hello');
+    },
     login(userDetails: I.UserLoginRequestBody, requestConfig: AxiosRequestConfig): Promise<AxiosResponse> {
         console.log('login requestBody: ' + querystring.stringify({ ...userDetails }));
+        console.log('login requestConfig: ' + JSON.stringify(requestConfig));
         return axiosApi.post('/oauth/token', querystring.stringify({ ...userDetails }), requestConfig);
     },
     logout(): Promise<AxiosResponse<I.StatusMsg>> {
         console.log('logout');
         // clear deposit if any
-        return axiosApi.post('/user/logout');
+        return axios.post('/logout');
     },
     // CRUD users
     register(requestBody: I.UserRegisterRequestBody): Promise<AxiosResponse<I.StatusMsg>> {
@@ -38,7 +42,7 @@ export default {
         return axiosApi.get<I.Product>(`/product/` + productId, requestConfig);
     },
     getProducts(): Promise<AxiosResponse<I.Product[]>> {
-        return axiosApi.get<I.Product[]>('/product/get-products');
+        return axiosApi.get<I.Product[]>('/product/list-products');
     },
     refillProduct(product: I.Product, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
         return axiosApi.post<I.StatusMsg>('/product/refill', product, requestConfig);

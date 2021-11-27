@@ -2,6 +2,7 @@ import { VuexModule, Module, Mutation, Action } from "vuex-class-modules"
 import { modulesStore } from "./store"
 import * as I from './types'
 import api, { axiosApi } from '../api/backend-api'
+import { AxiosRequestConfig } from "axios";
 
 @Module
 class VendingMachineModule extends VuexModule {
@@ -111,13 +112,13 @@ class VendingMachineModule extends VuexModule {
             console.log("Accessing (log in) backend with user: " + loginObject.userEmail);
 
             const requestBody: I.UserLoginRequestBody = {
-                userEmail: loginObject.userEmail,
-                userPass: loginObject.userPass,
+                username: loginObject.userEmail,
+                password: loginObject.userPass,
                 grant_type: 'password'
             }
 
             // auth contains the client id and client secret
-            const config = {
+            const config: AxiosRequestConfig = {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -218,6 +219,27 @@ class VendingMachineModule extends VuexModule {
                     // place the registerError state into our vuex store
                     this.register_error();
                     reject("Couldn't get products!")
+                })
+        })
+    }
+
+    @Action
+    async getHelloMessage() {
+        return new Promise((resolve, reject) => {
+            console.log("Get hello");
+            api.hello()
+                .then(response => {
+                    console.log("Response: '" + response.data + "' with Statuscode " + response.status);
+                    if (response.status == 200) {
+                        console.log("Got hello");
+                    }
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log("Error: " + error);
+                    // place the registerError state into our vuex store
+                    this.register_error();
+                    reject("Failed to ping server")
                 })
         })
     }

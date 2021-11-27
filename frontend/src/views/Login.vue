@@ -67,8 +67,8 @@ import router from "../router/index";
   name: "Login",
 })
 export default class Login extends Vue {
-  userEmail = "";
-  userPassword = "";
+  userEmail = "user@email.com";
+  userPassword = "user";
 
   callLogin(): void {
     VendingMachine.clear_errors();
@@ -81,6 +81,14 @@ export default class Login extends Vue {
       userPass: this.userPassword,
       accessToken: "",
     };
+
+    // VendingMachine.getHelloMessage()
+    //   .then(() => {
+    //     console.log("Got hello message!");
+    //   })
+    //   .catch((error: AxiosError) => {
+    //     console.log("Err getting hello message: " + error);
+    //   });
 
     VendingMachine.login(loginData)
       .then(() => {
