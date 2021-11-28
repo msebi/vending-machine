@@ -26,8 +26,8 @@ export default {
     },
     // CRUD users
     register(requestBody: I.UserRegisterRequestBody): Promise<AxiosResponse<I.StatusMsg>> {
-        console.log('login requestBody: ' + querystring.stringify({ ...requestBody }));
-        return axiosApi.post<I.StatusMsg>('/user/create', querystring.stringify({ ...requestBody }));
+        console.log('register requestBody: ' + JSON.stringify({ ...requestBody }));
+        return axiosApi.post<I.StatusMsg>('/user/create', requestBody);
     },
     getUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.User>> {
         return axiosApi.get<I.User>(`/user/` + userId, requestConfig);

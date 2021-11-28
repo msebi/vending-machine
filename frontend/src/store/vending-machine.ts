@@ -186,7 +186,7 @@ class VendingMachineModule extends VuexModule {
     @Action
     async register(registerObject: I.UserRegisterRequestBody) {
         return new Promise((resolve, reject) => {
-            console.log("Accessing (register) backend with user: " + registerObject.username);
+            console.log("Accessing (register) backend with user: " + registerObject.email);
             api.register(registerObject)
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);

@@ -5,13 +5,14 @@ export interface UserLoginRequestBody {
 }
 
 export interface UserRegisterRequestBody {
-    username: string;
+    email: string;
     password: string;
 }
 
 export interface CredentialsRegisterObject {
-    username: string;
+    email: string;
     password: string;
+    roles: Array<string>;
 }
 
 export interface CredentialsLoginObject {
