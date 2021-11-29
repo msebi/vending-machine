@@ -1,9 +1,7 @@
 <template>
   <div id="nav">
     <!-- <router-link to="/">Hello</router-link> | -->
-    <!-- <router-link to="/callservice">Service</router-link> |
-    <router-link to="/bootstrap">Bootstrap</router-link> | -->
-    <!-- <router-link to="/user">User</router-link> | -->
+
     <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">Logout</a>
     <router-link to="/login" v-else>Login</router-link> |
     <router-link to="/register">Register</router-link> |

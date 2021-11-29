@@ -3,13 +3,30 @@
     <div class="d-flex justify-content-center align-items-center container">
       <div class="row">
         <div class="col-sm-10 offset-sm-1 text-center">
-          <h1 class="display-6">Vending Machine</h1>
-          <div v-if="isAuthenticated">
-            <Products />
+          <div v-if="!isVendingMachineEmpty">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">$</th>
+                  <th scope="col">Left</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="product in products" :key="product.id">
+                  <th scope="row">1</th>
+                  <td>{{ product.id }}</td>
+                  <td>{{ product.productName }}</td>
+                  <td>{{ product.productPrice }}</td>
+                  <td>{{ product.productQty }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div v-else>
             <div class="alert alert-info">
-              <strong>Login to start using vending machine!</strong>
+              <strong>The Vending Machine is empty!</strong>
             </div>
           </div>
           <br />
@@ -28,24 +45,14 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Products from "./Products.vue";
 import VendingMachineStore from "../store/vending-machine";
 import * as I from "../store/types";
 
-// https://github.com/vuejs/vue-class-component/issues/406
 @Options({
-  name: "VendingMachine",
-  components: {
-    Products,
-  },
+  name: "Products",
 })
 export default class VendingMachine extends Vue {
   products: I.Product[] = [];
-
-  get isAuthenticated(): boolean {
-    console.log("isAuthenticated:" + VendingMachineStore.isLoggedIn);
-    return VendingMachineStore.isLoggedIn;
-  }
 
   get isVendingMachineEmpty(): boolean {
     console.log(
@@ -56,15 +63,13 @@ export default class VendingMachine extends Vue {
   }
   // TODO: do we need async here
   created(): void {
-    if (this.isAuthenticated) {
-      VendingMachineStore.getProductsAction()
-        .then(() => {
-          this.products = VendingMachineStore.getProductsGetter;
-        })
-        .catch((error) => {
-          console.log("Failed to get products: " + error);
-        });
-    }
+    VendingMachineStore.getProductsAction()
+      .then(() => {
+        this.products = VendingMachineStore.getProductsGetter;
+      })
+      .catch((error) => {
+        console.log("Failed to get products: " + error);
+      });
   }
 }
 </script>

@@ -3,8 +3,6 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import VendingMachineView from '../views/VendingMachine.vue'
 
-// import store from '../store'
-// import { store } from '../store/index'
 import VendingMachineStore from '../store/vending-machine'
 
 const routes: Array<RouteRecordRaw> = [
@@ -36,10 +34,8 @@ router.beforeEach((to, from, next) => {
         // if not, redirect to login page.
         if (VendingMachineStore.isLoggedIn) {
             next({
-                path: '/login'
+                path: '/vending-machine'
             })
-        } else {
-            next();
         }
     } else {
         next(); // make sure to always call next()!

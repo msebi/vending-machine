@@ -32,9 +32,8 @@ class VendingMachineModule extends VuexModule {
     };
 
     get isLoggedIn(): boolean {
-        console.log("isLoggedIn accessToken: " + this.accessToken)
-        console.log("isLoggedIn " + !this.accessToken || this.accessToken.length === 0)
-        if (!this.accessToken || this.accessToken.length === 0) return false;
+        console.log("isLoggedIn " + !this.accessToken && this.accessToken.length === 0);
+        if (!this.accessToken && this.accessToken.length === 0) return false;
         return true;
     }
 
