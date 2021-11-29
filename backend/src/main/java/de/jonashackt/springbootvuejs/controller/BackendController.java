@@ -13,6 +13,8 @@ import de.jonashackt.springbootvuejs.exception.ProductNotFoundException;
 import de.jonashackt.springbootvuejs.exception.UserNotFoundException;
 import de.jonashackt.springbootvuejs.repository.CashRepository;
 import de.jonashackt.springbootvuejs.repository.ProductRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +98,19 @@ public class BackendController {
             return account;
         }).orElseThrow(() -> new AccountNotFoundException(
                 "The user with the id " + id + " couldn't be found in the database."));
+    }
+
+    @ResponseBody
+    @GetMapping(path = "/user/get-current-user")
+    @Transactional
+    public Account getCurrentAccount() {
+        log.info("Fetching current user from db");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String accountName = authentication.getName();
+        Account account = (Account) accountService.loadUserByUsername(accountName);
+        log.info("Current user: " + account.getEmail());
+
+        return account;
     }
 
     @ResponseBody
