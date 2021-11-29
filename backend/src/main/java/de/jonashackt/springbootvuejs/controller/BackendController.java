@@ -1,6 +1,8 @@
 package de.jonashackt.springbootvuejs.controller;
 
 import de.jonashackt.springbootvuejs.authentication.server.accounts.Account;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountRole;
+import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountService;
 import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountNotFoundException;
 import de.jonashackt.springbootvuejs.authentication.server.accounts.AccountRepository;
 import de.jonashackt.springbootvuejs.domain.Order;
@@ -16,11 +18,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +44,23 @@ public class BackendController {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
+    AccountService accountService;
+    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private CashRepository cashRepository;
+
+    private Account createAccount(String email, String password, Set<AccountRole> roles) {
+        return Account.builder().email(email).password(password).roles(roles).build();
+    }
+
+    private void saveIfNotExist(Account account) {
+        if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
+            return;
+        }
+
+        accountService.saveAccount(account);
+    }
 
     @ResponseBody
     @RequestMapping(path = "/hello")
@@ -53,8 +75,11 @@ public class BackendController {
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
     public StatusMsg addNewAccount(@RequestBody Account account) {
-        Account savedAccount = accountRepository
-                .save(new Account(account.getEmail(), account.getPassword(), account.getRoles()));
+        Account savedAccount = createAccount(account.getEmail(), account.getPassword(),
+                Arrays.asList(AccountRole.USER).stream().collect(Collectors.toSet()));
+
+        saveIfNotExist(savedAccount);
+
         log.info(savedAccount.toString() + " successfully saved into DB; email: " + savedAccount.getEmail() + " roles: "
                 + savedAccount.getRoles());
 

@@ -32,7 +32,7 @@
                   class="form-control"
                   id="passwordId"
                   placeholder="Enter password"
-                  v-model="passowrd"
+                  v-model="password"
                 />
               </div>
 
