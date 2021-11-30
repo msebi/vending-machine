@@ -25,12 +25,16 @@ export default {
         return axiosApi.post('/logout');
     },
     // CRUD users
+    // TODO: make sure the backend does not accept users with admin roles 
     register(requestBody: I.UserRegisterRequestBody): Promise<AxiosResponse<I.StatusMsg>> {
         console.log('register requestBody: ' + JSON.stringify({ ...requestBody }));
         return axiosApi.post<I.StatusMsg>('/user/create', requestBody);
     },
     getUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.User>> {
         return axiosApi.get<I.User>(`/user/` + userId, requestConfig);
+    },
+    getCurrentUserRoles(): Promise<AxiosResponse<Array<string>>> {
+        return axiosApi.get<Array<string>>(`/user/get-current-user-roles`);
     },
     deleteUser(userId: number, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
         return axiosApi.delete(`/user/del/` + userId, requestConfig);

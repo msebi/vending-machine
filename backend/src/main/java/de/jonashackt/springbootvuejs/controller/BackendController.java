@@ -15,11 +15,13 @@ import de.jonashackt.springbootvuejs.repository.CashRepository;
 import de.jonashackt.springbootvuejs.repository.ProductRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -101,16 +103,16 @@ public class BackendController {
     }
 
     @ResponseBody
-    @GetMapping(path = "/user/get-current-user")
+    @GetMapping(path = "/user/get-current-user-roles")
     @Transactional
-    public Account getCurrentAccount() {
+    public Set<AccountRole> getCurrentAccount() {
         log.info("Fetching current user from db");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String accountName = authentication.getName();
-        Account account = (Account) accountService.loadUserByUsername(accountName);
-        log.info("Current user: " + account.getEmail());
+        Optional<Account> account = accountRepository.findByEmail(accountName);
+        log.info("Current user: " + account.get());
 
-        return account;
+        return account.get().getRoles();
     }
 
     @ResponseBody

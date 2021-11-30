@@ -33,7 +33,7 @@ export interface User {
     id?: number;
     email: string;
     password: string;
-    role: string[];
+    roles: Array<string>;
 }
 
 // Snack to be added/bought to the vending machine
