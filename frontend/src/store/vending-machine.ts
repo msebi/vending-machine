@@ -268,26 +268,6 @@ class VendingMachineModule extends VuexModule {
                 })
         })
     }
-
-    // persons: PersonMapping = {}
-
-    // @Mutation
-    // setPersons(persons: Person[]) {
-    //     this.persons = _keyBy(persons, 'id')
-    // }
-
-    // get personFullName() {
-    //     return (id: string) => {
-    //         const { name, lastName } = this.persons[id]
-    //         return `${name} ${lastName}`
-    //     }
-    // }
-
-    // @Action
-    // async getPersons() {
-    //     await new Promise(resolve => setTimeout(resolve, 500))
-    //     this.setPersons(persons)
-    // }
 }
 
 // Register the module and Create a proxy to it

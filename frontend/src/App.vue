@@ -1,12 +1,16 @@
 <template>
   <div id="nav">
-    <!-- <router-link to="/">Hello</router-link> | -->
+    <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">
+      Logout
+    </a>
+    <router-link to="/login" v-else> Login </router-link>
+    <router-link v-if="!isAuthenticated" to="/register"> Register </router-link>
+    <router-link v-if="isAuthenticated" to="/vending-machine">
+      Vending Machine
+    </router-link>
 
-    <a href="" v-if="isAuthenticated" @click.prevent="onClickLogout">Logout</a>
-    <router-link to="/login" v-else>Login</router-link> |
-    <router-link to="/register">Register</router-link> |
     <!-- <router-link to="/vending-machine">Vending Machine</router-link> | -->
-    <router-link to="/protected">Protected</router-link>
+    <!-- <router-link to="/protected">Protected</router-link> -->
   </div>
   <router-view />
 </template>

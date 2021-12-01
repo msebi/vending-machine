@@ -7,9 +7,9 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  <th scope="col">No.</th>
                   <th scope="col">Product Name</th>
-                  <th scope="col">$</th>
+                  <th scope="col">Price (cents)</th>
                   <th scope="col">Left</th>
                 </tr>
               </thead>
