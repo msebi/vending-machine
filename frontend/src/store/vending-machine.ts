@@ -15,9 +15,10 @@ class VendingMachineModule extends VuexModule {
     userEmail = "";
     userPass = "";
     accessToken = "";
-    productsInVendingMachine: I.Product[] = [];
+    userRoles: Array<string> = new Array<string>();
+    productsInVendingMachine: Array<I.Product> = new Array<I.Product>();
     order: I.Order = {
-        products: [],
+        products: new Array<I.Product>(),
         deposit: {
             "5": 0,
             "10": 0,
@@ -92,6 +93,11 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Mutation
+    set_user_roles(userRoles: Array<string>) {
+        this.userRoles = Object.assign([], userRoles);
+    }
+
+    @Mutation
     logout_error() {
         this.logoutSuccess = false;
     }
@@ -151,7 +157,20 @@ class VendingMachineModule extends VuexModule {
                         console.log('Setting bearer token');
                         axiosApi.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
                     }
-                    resolve(response)
+                })
+                .then(() => {
+                    api.getCurrentUserRoles().then(response => {
+                        console.log("Response user roles: '" + response.data + "' with StatusCode " + response.status);
+                        if (response.status == 200) {
+                            console.log("Got current user roles");
+
+                            this.set_user_roles(response.data);
+                        }
+                        resolve(response);
+                    })
+                        .catch(error => {
+                            console.log("Error getting current user roles: " + error);
+                        });
                 })
                 .catch(error => {
                     console.log("Error login: " + error);

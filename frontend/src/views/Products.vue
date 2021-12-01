@@ -15,7 +15,6 @@
               </thead>
               <tbody>
                 <tr v-for="product in products" :key="product.id">
-                  <th scope="row">1</th>
                   <td>{{ product.id }}</td>
                   <td>{{ product.productName }}</td>
                   <td>{{ product.productPrice }}</td>
@@ -52,7 +51,7 @@ import * as I from "../store/types";
   name: "Products",
 })
 export default class VendingMachine extends Vue {
-  products: I.Product[] = [];
+  products: Array<I.Product> = new Array<I.Product>();
 
   get isVendingMachineEmpty(): boolean {
     console.log(

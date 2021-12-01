@@ -64,15 +64,6 @@ export interface Order {
 }
 
 export interface VendingMachineState {
-    loginSuccess: boolean;
-    loginError: boolean;
-    logoutSuccess: boolean;
-    logoutError: boolean;
-    registerSuccess: boolean;
-    registerError: boolean;
-    username: string;
-    password: string;
-    accessToken: string;
     productsInVendingMachine: Array<Product>;
     order: Order;
 }

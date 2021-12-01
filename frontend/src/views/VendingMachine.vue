@@ -54,17 +54,5 @@ export default class VendingMachine extends Vue {
     );
     return VendingMachineStore.productsInVendingMachine.length === 0;
   }
-  // TODO: do we need async here
-  created(): void {
-    if (this.isAuthenticated) {
-      VendingMachineStore.getProductsAction()
-        .then(() => {
-          this.products = VendingMachineStore.getProductsGetter;
-        })
-        .catch((error) => {
-          console.log("Failed to get products: " + error);
-        });
-    }
-  }
 }
 </script>
