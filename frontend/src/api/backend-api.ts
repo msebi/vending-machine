@@ -59,8 +59,8 @@ export default {
     deposit(deposit: I.Deposit, requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.Deposit>> {
         return axiosApi.post<I.Deposit>('/deposit/', requestConfig);
     },
-    buy(order: I.Order): Promise<AxiosResponse<I.Order>> {
-        return axiosApi.post<I.Order>('/buy/', order);
+    buy(order: I.Order): Promise<AxiosResponse<I.ProcessedOrder>> {
+        return axiosApi.post<I.ProcessedOrder>('/buy/', order);
     },
     reset(requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
         return axiosApi.get('/reset/', requestConfig);

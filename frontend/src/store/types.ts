@@ -58,8 +58,14 @@ export interface Deposit {
 }
 
 export interface Order {
-    products: Product[];
+    products: Array<Product>;
     deposit: Deposit;
+}
+
+export interface ProcessedOrder {
+    products: Array<Product>;
+    deposit: Deposit;
+    statusMsg: StatusMsg;
 }
 
 export interface VendingMachineState {

@@ -133,6 +133,8 @@ export default class VendingMachine extends Vue {
   coin50Cents = 0;
   coin100Cents = 0;
 
+  isProductIdValid = false;
+
   get isVendingMachineEmpty(): boolean {
     console.log(
       "Products list size: " +
@@ -153,7 +155,23 @@ export default class VendingMachine extends Vue {
     console.log("purchasing product with id: " + this.productId);
 
     const productsToPurchase: Array<I.Product> = new Array<I.Product>();
-    // Only product Id is considered
+    // User inputs product id, remaining fields are fetched from store
+    // Error is signaled if product id is not found or there are multiple
+    // entrie of it
+    const matchingProductsInVendingMachine: Array<I.Product> = VendingMachineStore.getProductsGetter.filter(
+      (prod) => prod.id === this.productId
+    );
+
+    if (
+      matchingProductsInVendingMachine.length === 0 ||
+      matchingProductsInVendingMachine.length > 1
+    ) {
+      this.isProductIdValid = false;
+      return;
+    }
+
+    this.isProductIdValid = true;
+
     const productToPurchase: I.Product = {
       id: this.productId,
       productName: "",
@@ -179,7 +197,7 @@ export default class VendingMachine extends Vue {
 
   // TODO: do we need async here
   created(): void {
-    VendingMachineStore.getProducts()
+    VendingMachineStore.getProductsAction()
       .then(() => {
         this.products = VendingMachineStore.getProductsGetter;
       })

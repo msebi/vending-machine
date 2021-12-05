@@ -27,6 +27,20 @@ class VendingMachineModule extends VuexModule {
             "100": 0
         }
     };
+    processedOrder: I.ProcessedOrder = {
+        products: new Array<I.Product>(),
+        deposit: {
+            "5": 0,
+            "10": 0,
+            "20": 0,
+            "50": 0,
+            "100": 0
+        },
+        statusMsg: {
+            msg: "",
+            status: ""
+        }
+    };
 
     get isLoggedIn(): boolean {
         console.log("isLoggedIn " + !this.accessToken && this.accessToken.length === 0);
@@ -109,14 +123,19 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Mutation
-    set_products(productsInVendingMachine: I.Product[]) {
+    set_products(productsInVendingMachine: Array<I.Product>) {
         this.productsInVendingMachine = productsInVendingMachine;
+    }
+
+    @Mutation
+    set_bought_products(order: I.ProcessedOrder) {
+        this.processedOrder = { ...order };
     }
 
     @Action
     async login(loginObject: I.CredentialsLoginObject) {
         return new Promise((resolve, reject) => {
-            console.log("Accessing (log in) backend with user: " + loginObject.username);
+            console.log("Accessing log in backend with user: " + loginObject.username);
 
             const requestBody: I.UserLoginRequestBody = {
                 username: loginObject.username,
@@ -222,7 +241,7 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Action
-    async getProducts() {
+    async getProductsAction() {
         return new Promise((resolve, reject) => {
             console.log("Fetching products");
             api.getProducts()
@@ -239,7 +258,7 @@ class VendingMachineModule extends VuexModule {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
                     this.register_error();
-                    reject("Couldn't get products!")
+                    reject("Couldn't get products!");
                 })
         })
     }
@@ -252,17 +271,17 @@ class VendingMachineModule extends VuexModule {
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
                     if (response.status == 200) {
-                        console.log("Got products");
+                        console.log("Bought product");
                         // place the registerSuccess state into our vuex store
-                        this.set_products(response.data)
+                        this.set_bought_products(response.data);
                     }
-                    resolve(response)
+                    resolve(response);
                 })
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
                     this.register_error();
-                    reject("Couldn't get products!")
+                    reject("Couldn't buy product!")
                 })
         })
     }
