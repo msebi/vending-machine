@@ -60,7 +60,6 @@ export interface Deposit {
 export interface Order {
     products: Product[];
     deposit: Deposit;
-    statusMsg: StatusMsg;
 }
 
 export interface VendingMachineState {

@@ -300,8 +300,6 @@ public class VendingMachine {
             Optional<Product> dbProduct = productRepository.findById(product.getId());
             if (!dbProduct.isPresent())
                 return false;
-            if (!product.getProductName().equalsIgnoreCase(dbProduct.get().getProductName()))
-                return false;
         }
         return true;
     }
@@ -392,21 +390,24 @@ public class VendingMachine {
             StatusMsg statusMsg = new StatusMsg(
                     "Either the products were not found or there is a mismatch between their id and name", "FAILED");
             // return unchanged deposit and no products; do not persist cash or products
-            return new Order(order.getProducts(), order.getDeposit(), statusMsg);
+            return fillInOrderDetails(order.getProducts(), order.getDeposit(), statusMsg);
+            // return new Order(order.getProducts(), order.getDeposit(), statusMsg);
         }
 
         // are there enough products in the vending machine?
         if (!areThereEnoughProductsInVendingMachine(order.getProducts())) {
             StatusMsg statusMsg = new StatusMsg("Not enough products in vending machine", "FAILED");
             // return unchanged deposit and no products; do not persist cash or products
-            return new Order(order.getProducts(), order.getDeposit(), statusMsg);
+            return fillInOrderDetails(order.getProducts(), order.getDeposit(), statusMsg);
+            // return new Order(order.getProducts(), order.getDeposit(), statusMsg);
         }
 
         // is there enough cash in the deposit?
         if (totalProductsPrice > totalDeposit) {
             StatusMsg statusMsg = new StatusMsg("Not enough cash in deposit", "FAILED");
             // return unchanged deposit and no products; do not persist cash or products
-            return new Order(order.getProducts(), order.getDeposit(), statusMsg);
+            return fillInOrderDetails(order.getProducts(), order.getDeposit(), statusMsg);
+            // return new Order(order.getProducts(), order.getDeposit(), statusMsg);
         }
 
         int balance = totalDeposit - totalProductsPrice;

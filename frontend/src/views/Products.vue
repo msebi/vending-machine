@@ -29,15 +29,16 @@
           <h3 class="text-center">
             Purchase:
           </h3>
-          <form class="ms-auto">
+          <form @submit.prevent="callPurchase()">
             <div class="form-group">
-              <label for="productId">Product #id</label>
-              <div>
+              <label for="productId" class="form-label">Product #id</label>
+              <div class="mt-2 col-md-12">
                 <input
                   type="number"
                   id="productId"
                   min="0"
-                  data-bind="value:replyNumber"
+                  required
+                  v-model="productId"
                 />
               </div>
             </div>
@@ -51,7 +52,7 @@
                   type="number"
                   id="coin5Cents"
                   min="0"
-                  data-bind="value:replyNumber"
+                  v-model="coin5Cents"
                 />
               </div>
               <label for="coin5Cents">10¢</label>
@@ -60,7 +61,7 @@
                   type="number"
                   id="coin10Cents"
                   min="0"
-                  data-bind="value:replyNumber"
+                  v-model="coin10Cents"
                 />
               </div>
               <label for="coin5Cents">20¢</label>
@@ -69,7 +70,7 @@
                   type="number"
                   id="coin20Cents"
                   min="0"
-                  data-bind="value:replyNumber"
+                  v-model="coin20Cents"
                 />
               </div>
               <label for="coin5Cents">50¢</label>
@@ -78,7 +79,7 @@
                   type="number"
                   id="coin50Cents"
                   min="0"
-                  data-bind="value:replyNumber"
+                  v-model="coin50Cents"
                 />
               </div>
               <label for="coin5Cents">100¢</label>
@@ -87,7 +88,7 @@
                   type="number"
                   id="coin100Cents"
                   min="0"
-                  data-bind="value:replyNumber"
+                  v-model="coin100Cents"
                 />
               </div>
             </div>
@@ -123,6 +124,14 @@ import * as I from "../store/types";
 })
 export default class VendingMachine extends Vue {
   products: Array<I.Product> = new Array<I.Product>();
+  returnedStatusMsg!: I.StatusMsg;
+
+  productId = 0;
+  coin5Cents = 0;
+  coin10Cents = 0;
+  coin20Cents = 0;
+  coin50Cents = 0;
+  coin100Cents = 0;
 
   get isVendingMachineEmpty(): boolean {
     console.log(
@@ -132,11 +141,45 @@ export default class VendingMachine extends Vue {
     return VendingMachineStore.productsInVendingMachine.length === 0;
   }
 
-  get buyProduct():
+  set setBoughtProductStatusMsg(statusMsg: I.StatusMsg) {
+    this.returnedStatusMsg = { ...statusMsg };
+  }
+
+  get getBoughtProductStatusMsg(): I.StatusMsg {
+    return this.returnedStatusMsg;
+  }
+
+  callPurchase(): void {
+    console.log("purchasing product with id: " + this.productId);
+
+    const productsToPurchase: Array<I.Product> = new Array<I.Product>();
+    // Only product Id is considered
+    const productToPurchase: I.Product = {
+      id: this.productId,
+      productName: "",
+      productPrice: 0,
+      productQty: 1,
+    };
+    productsToPurchase.push(productToPurchase);
+    const deposit: I.Deposit = {
+      5: this.coin5Cents,
+      10: this.coin10Cents,
+      20: this.coin20Cents,
+      50: this.coin50Cents,
+      100: this.coin100Cents,
+    };
+
+    const purchaseOrder: I.Order = {
+      products: productsToPurchase,
+      deposit: deposit,
+    };
+
+    console.log("purchase order: " + JSON.stringify(purchaseOrder));
+  }
 
   // TODO: do we need async here
   created(): void {
-    VendingMachineStore.getProductsAction()
+    VendingMachineStore.getProducts()
       .then(() => {
         this.products = VendingMachineStore.getProductsGetter;
       })

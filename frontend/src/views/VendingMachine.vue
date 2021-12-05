@@ -1,19 +1,12 @@
 <template>
-  <div class="unprotected">
-    <div class="d-flex justify-content-center align-items-center container">
-      <div class="row">
-        <div class="col-sm-10 offset-sm-1 text-center">
-          <h1 class="display-6">Vending Machine</h1>
-          <div v-if="isAuthenticated">
-            <Products />
-          </div>
-          <div v-else>
-            <div class="alert alert-info">
-              <strong>Login to start using vending machine!</strong>
-            </div>
-          </div>
-          <br />
-        </div>
+  <div>
+    <h1 class="display-6">Vending Machine</h1>
+    <div v-if="isAuthenticated">
+      <Products />
+    </div>
+    <div v-else>
+      <div class="alert alert-info">
+        <strong>Login to start using vending machine!</strong>
       </div>
     </div>
   </div>

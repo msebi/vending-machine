@@ -25,10 +25,6 @@ class VendingMachineModule extends VuexModule {
             "20": 0,
             "50": 0,
             "100": 0
-        },
-        statusMsg: {
-            msg: "",
-            status: ""
         }
     };
 
@@ -226,10 +222,33 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Action
-    async getProductsAction() {
+    async getProducts() {
         return new Promise((resolve, reject) => {
             console.log("Fetching products");
             api.getProducts()
+                .then(response => {
+                    console.log("Response: '" + response.data + "' with Statuscode " + response.status);
+                    if (response.status == 200) {
+                        console.log("Got products");
+                        // place the registerSuccess state into our vuex store
+                        this.set_products(response.data)
+                    }
+                    resolve(response)
+                })
+                .catch(error => {
+                    console.log("Error: " + error);
+                    // place the registerError state into our vuex store
+                    this.register_error();
+                    reject("Couldn't get products!")
+                })
+        })
+    }
+
+    @Action
+    async buyProduct(order: I.Order) {
+        return new Promise((resolve, reject) => {
+            console.log("Processing order: ");
+            api.buy(order)
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
                     if (response.status == 200) {
