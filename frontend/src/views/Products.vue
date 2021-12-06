@@ -95,6 +95,17 @@
             <div class="mt-2 col-md-12">
               <button type="submit" class="btn btn-primary">Buy!</button>
             </div>
+            <div
+              class="d-flex justify-content-center"
+              v-if="!this.isProductIdValid"
+            >
+              <div
+                class="mt-2 col-md-12 alert alert-danger w-25 p-3"
+                role="alert"
+              >
+                Invalid product Id!
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -133,7 +144,7 @@ export default class VendingMachine extends Vue {
   coin50Cents = 0;
   coin100Cents = 0;
 
-  isProductIdValid = false;
+  isProductIdValid = true;
 
   get isVendingMachineEmpty(): boolean {
     console.log(
@@ -174,8 +185,8 @@ export default class VendingMachine extends Vue {
 
     const productToPurchase: I.Product = {
       id: this.productId,
-      productName: "",
-      productPrice: 0,
+      productName: matchingProductsInVendingMachine[0].productName,
+      productPrice: matchingProductsInVendingMachine[0].productPrice,
       productQty: 1,
     };
     productsToPurchase.push(productToPurchase);
@@ -193,6 +204,8 @@ export default class VendingMachine extends Vue {
     };
 
     console.log("purchase order: " + JSON.stringify(purchaseOrder));
+
+    VendingMachineStore.buyProduct(purchaseOrder);
   }
 
   // TODO: do we need async here
