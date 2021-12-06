@@ -8,10 +8,22 @@ import { AxiosRequestConfig } from "axios";
 class VendingMachineModule extends VuexModule {
     loginSuccess = false;
     loginError = false;
+    loginErrorMsg = "";
+
     logoutSuccess = false;
     logoutError = false;
+    logoutErrorMsg = "";
+
     registerSuccess = false;
     registerError = false;
+    registerErrorMsg = "";
+
+    buySuccess = false;
+    // Buy needs to be interactive to the end user
+    buySuccessMsg = "";
+    buyError = false;
+    buyErrorMsg = "";
+
     userEmail = "";
     userPass = "";
     accessToken = "";
@@ -81,24 +93,31 @@ class VendingMachineModule extends VuexModule {
         this.loginError = false;
         this.logoutError = false;
         this.registerError = false;
+        this.buyError = false;
     }
 
     @Mutation
     login_success(payload: I.CredentialsLoginObject) {
         this.loginSuccess = true;
+        this.loginError = false;
+        this.buyError = false;
         this.accessToken = payload.accessToken;
         localStorage.accessToken = payload.accessToken;
     }
 
     @Mutation
-    login_error() {
+    login_error(loginErrorMsg: string) {
+        this.loginSuccess = false;
         this.loginError = true;
+        this.buyError = false;
+        this.loginErrorMsg = loginErrorMsg;
     }
 
     @Mutation
     logout_success() {
         this.accessToken = "";
         this.logoutSuccess = true;
+        this.logoutError = false;
         delete localStorage.accessToken;
     }
 
@@ -108,18 +127,37 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Mutation
-    logout_error() {
+    logout_error(logoutErrorMsg: string) {
+        this.logoutError = true;
         this.logoutSuccess = false;
+        this.loginErrorMsg = logoutErrorMsg;
     }
 
     @Mutation
     register_success() {
         this.registerSuccess = true;
+        this.registerError = false;
     }
 
     @Mutation
-    register_error() {
+    register_error(registerErrorMsg: string) {
         this.registerError = true;
+        this.registerSuccess = false;
+        this.registerErrorMsg = registerErrorMsg;
+    }
+
+    @Mutation
+    buy_success(buySuccessMsg: string) {
+        this.buySuccess = true;
+        this.buySuccessMsg = buySuccessMsg;
+        this.buyError = false;
+    }
+
+    @Mutation
+    buy_error(buyErrorMsg: string) {
+        this.buyError = true;
+        this.buyErrorMsg = buyErrorMsg;
+        this.buySuccess = false;
     }
 
     @Mutation
@@ -282,8 +320,8 @@ class VendingMachineModule extends VuexModule {
                     // place the registerError state into our vuex store
                     this.register_error();
                     reject("Couldn't buy product!")
-                })
-        })
+                });
+        });
     }
 
     @Action

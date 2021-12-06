@@ -39,7 +39,7 @@
               <button type="submit" class="btn btn-primary row mt-2">
                 Login
               </button>
-              <p v-if="error" class="error">Bad login information</p>
+              <p v-if="error" class="error">Bad Login Details!</p>
             </form>
           </div>
           <br />
