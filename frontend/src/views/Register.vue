@@ -88,7 +88,7 @@ export default class Register extends Vue {
       })
       .catch((error: AxiosError) => {
         console.log("Err while registering: " + error);
-        VendingMachine.register_error();
+        VendingMachine.register_error(error.message);
       });
   }
 }

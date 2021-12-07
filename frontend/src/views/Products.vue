@@ -106,6 +106,40 @@
                 Invalid product Id!
               </div>
             </div>
+            <div
+              class="d-flex justify-content-center"
+              v-if="this.getHasBoughtErrored"
+            >
+              <div
+                class="mt-2 col-md-12 alert alert-danger w-25 p-3"
+                role="alert"
+              >
+                Failed to purchase! Reason:
+                {{ this.getBuyErrorMessage }}
+              </div>
+            </div>
+            <div
+              class="d-flex justify-content-center"
+              v-if="!this.wasPurchaseSuccessful"
+            >
+              <div
+                class="mt-2 col-md-12 alert alert-danger w-25 p-3"
+                role="alert"
+              >
+                Could not get
+                {{ this.getPurchasedProductName }}! Reason:
+                {{ this.getBuyErrorMessage }}
+              </div>
+            </div>
+            <div class="d-flex justify-content-center" v-else>
+              <div
+                class="mt-2 col-md-12 alert alert-danger w-25 p-3"
+                role="alert"
+              >
+                Got
+                {{ this.getPurchasedProductName }}! Enjoy your day!
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -162,8 +196,27 @@ export default class VendingMachine extends Vue {
     return this.returnedStatusMsg;
   }
 
+  get getHasBoughtErrored(): boolean {
+    return VendingMachineStore.getHasBoughtErrored;
+  }
+
+  get getBuyErrorMessage(): string {
+    return VendingMachineStore.getBuyErrorMessage;
+  }
+
+  get getPurchasedProductName(): string {
+    return VendingMachineStore.getBoughtProduct.products[0].productName;
+  }
+
+  get wasPurchaseSuccessful(): boolean {
+    if (!VendingMachineStore.getHasBoughtErrored) {
+      return VendingMachineStore.getBuySuccessMessage.status === "SUCCESS";
+    }
+    return false;
+  }
+
   callPurchase(): void {
-    console.log("purchasing product with id: " + this.productId);
+    console.log("Purchasing product with id: " + this.productId);
 
     const productsToPurchase: Array<I.Product> = new Array<I.Product>();
     // User inputs product id, remaining fields are fetched from store
@@ -203,9 +256,15 @@ export default class VendingMachine extends Vue {
       deposit: deposit,
     };
 
-    console.log("purchase order: " + JSON.stringify(purchaseOrder));
+    console.log("Purchase order: " + JSON.stringify(purchaseOrder));
 
-    VendingMachineStore.buyProduct(purchaseOrder);
+    VendingMachineStore.buyProduct(purchaseOrder)
+      .then(() => {
+        console.log("Purchase successful!");
+      })
+      .catch((error) => {
+        console.log("Failed to purchase product; error: " + error);
+      });
   }
 
   // TODO: do we need async here

@@ -22,7 +22,7 @@ import router from "./router/index";
 export default {
   computed: {
     isAuthenticated(): boolean {
-      if (VendingMachine.isLoggedIn) return true;
+      if (VendingMachine.getIsLoggedIn) return true;
       return false;
     },
   },

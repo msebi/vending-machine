@@ -36,16 +36,8 @@ export default class VendingMachine extends Vue {
   products: I.Product[] = [];
 
   get isAuthenticated(): boolean {
-    console.log("isAuthenticated:" + VendingMachineStore.isLoggedIn);
-    return VendingMachineStore.isLoggedIn;
-  }
-
-  get isVendingMachineEmpty(): boolean {
-    console.log(
-      "Products list size: " +
-        VendingMachineStore.productsInVendingMachine.length
-    );
-    return VendingMachineStore.productsInVendingMachine.length === 0;
+    console.log("isAuthenticated:" + VendingMachineStore.getIsLoggedIn);
+    return VendingMachineStore.getIsLoggedIn;
   }
 }
 </script>

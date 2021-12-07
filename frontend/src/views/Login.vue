@@ -97,7 +97,7 @@ export default class Login extends Vue {
       })
       .catch((error: AxiosError) => {
         console.log("Err while logging in: " + error);
-        VendingMachine.login_error();
+        VendingMachine.login_error(error.message);
       });
   }
 }

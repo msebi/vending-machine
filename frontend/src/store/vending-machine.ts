@@ -20,7 +20,10 @@ class VendingMachineModule extends VuexModule {
 
     buySuccess = false;
     // Buy needs to be interactive to the end user
-    buySuccessMsg = "";
+    buySuccessMsg: I.StatusMsg = {
+        msg: "",
+        status: ""
+    };
     buyError = false;
     buyErrorMsg = "";
 
@@ -54,7 +57,7 @@ class VendingMachineModule extends VuexModule {
         }
     };
 
-    get isLoggedIn(): boolean {
+    get getIsLoggedIn(): boolean {
         console.log("isLoggedIn " + !this.accessToken && this.accessToken.length === 0);
         if (!this.accessToken && this.accessToken.length === 0) return false;
         return true;
@@ -64,15 +67,15 @@ class VendingMachineModule extends VuexModule {
         return this.accessToken || localStorage.accessToken;
     }
 
-    get hasLoginErrored() {
+    get getHasLoginErrored() {
         return this.loginError;
     }
 
-    get isRegistered() {
+    get getIsRegistered() {
         return this.registerSuccess;
     }
 
-    get hasRegisterErrored() {
+    get getHasRegisterErrored() {
         return this.registerError;
     }
 
@@ -86,6 +89,22 @@ class VendingMachineModule extends VuexModule {
 
     get getProductsGetter() {
         return this.productsInVendingMachine;
+    }
+
+    get getHasBoughtErrored() {
+        return this.buyError;
+    }
+
+    get getBuyErrorMessage() {
+        return this.buyErrorMsg;
+    }
+
+    get getBuySuccessMessage() {
+        return this.buySuccessMsg;
+    }
+
+    get getBoughtProduct() {
+        return this.processedOrder;
     }
 
     @Mutation
@@ -147,9 +166,9 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Mutation
-    buy_success(buySuccessMsg: string) {
+    buy_success(buySuccessMsg: I.StatusMsg) {
         this.buySuccess = true;
-        this.buySuccessMsg = buySuccessMsg;
+        this.buySuccessMsg = { ...buySuccessMsg };
         this.buyError = false;
     }
 
@@ -168,6 +187,7 @@ class VendingMachineModule extends VuexModule {
     @Mutation
     set_bought_products(order: I.ProcessedOrder) {
         this.processedOrder = { ...order };
+        this.buy_success(order.statusMsg);
     }
 
     @Action
@@ -227,7 +247,7 @@ class VendingMachineModule extends VuexModule {
                 })
                 .catch(error => {
                     console.log("Error login: " + error);
-                    this.login_error();
+                    this.login_error(error);
                     reject("Invalid credentials!")
                 })
         })
@@ -248,7 +268,7 @@ class VendingMachineModule extends VuexModule {
             }).catch(error => {
                 console.log("Error logout: " + error);
                 // place the loginError state into our vuex store
-                this.logout_error();
+                this.logout_error(error);
                 reject(error);
             });
         });
@@ -272,7 +292,7 @@ class VendingMachineModule extends VuexModule {
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
-                    this.register_error();
+                    this.register_error(error);
                     reject("Failed to register!")
                 })
         })
@@ -295,7 +315,7 @@ class VendingMachineModule extends VuexModule {
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
-                    this.register_error();
+                    this.register_error(error);
                     reject("Couldn't get products!");
                 })
         })
@@ -318,7 +338,7 @@ class VendingMachineModule extends VuexModule {
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
-                    this.register_error();
+                    this.buy_error(error);
                     reject("Couldn't buy product!")
                 });
         });
@@ -339,7 +359,7 @@ class VendingMachineModule extends VuexModule {
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
-                    this.register_error();
+                    this.register_error(error);
                     reject("Failed to ping server")
                 })
         })
