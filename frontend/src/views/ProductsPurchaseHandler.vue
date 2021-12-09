@@ -1,8 +1,6 @@
 <template>
   <div class="col-6">
-    <h3 class="text-center">
-      Purchase:
-    </h3>
+    <h3 class="text-center">Purchase:</h3>
     <form @submit.prevent="callPurchase()">
       <div class="form-group">
         <label for="productId" class="form-label">Product #id</label>
@@ -16,9 +14,7 @@
           />
         </div>
       </div>
-      <h4 class="mt-2 col-md-12 text-center">
-        Insert Coins
-      </h4>
+      <h4 class="mt-2 col-md-12 text-center">Insert Coins</h4>
       <div class="form-group mt-2 col-md-12">
         <label for="coin5Cents">5¢</label>
         <div class="mt-2 col-md-12">
@@ -51,7 +47,7 @@
       </div>
       <div
         class="d-flex justify-content-center"
-        v-if="this.getWasBuyButtonClicked && !this.isProductIdValid"
+        v-if="this.WasBuyButtonClicked && !this.IsProductIdValid"
       >
         <div class="mt-2 col-md-12 alert alert-danger w-25 p-3" role="alert">
           Invalid product Id!
@@ -59,27 +55,44 @@
       </div>
       <div
         class="d-flex justify-content-center"
-        v-if="this.getWasBuyButtonClicked && this.getHasBoughtErrored"
+        v-if="
+          this.WasBuyButtonClicked &&
+          this.IsProductIdValid &&
+          this.BuyNetworkError
+        "
       >
         <div class="mt-2 col-md-12 alert alert-danger w-25 p-3" role="alert">
           Failed to purchase! Reason:
-          {{ this.getBuyErrorMessage }}
+          {{ this.BuyNetworkErrorMsg }}
         </div>
       </div>
       <div
         class="d-flex justify-content-center"
-        v-if="this.getWasBuyButtonClicked && !this.wasPurchaseSuccessful"
+        v-if="
+          this.WasBuyButtonClicked &&
+          this.IsProductIdValid &&
+          !this.BuyNetworkError &&
+          !this.WasPurchaseSuccessful
+        "
       >
         <div class="mt-2 col-md-12 alert alert-danger w-25 p-3" role="alert">
           Could not get
-          {{ this.getPurchasedProductName }}! Reason:
-          {{ this.getBuyErrorMessage }}
+          {{ this.PurchasedProductName }}! Reason:
+          {{ this.BuyErrorMessage.statusMsg }}
         </div>
       </div>
-      <div class="d-flex justify-content-center" v-else>
-        <div class="mt-2 col-md-12 alert alert-danger w-25 p-3" role="alert">
+      <div
+        class="d-flex justify-content-center"
+        v-if="
+          this.WasBuyButtonClicked &&
+          this.IsProductIdValid &&
+          !this.BuyNetworkError &&
+          this.WasPurchaseSuccessful
+        "
+      >
+        <div class="mt-2 col-md-12 alert alert-success w-25 p-3" role="alert">
           Got
-          {{ this.getPurchasedProductName }}! Enjoy your day!
+          {{ this.PurchasedProductName }}! Enjoy your day!
         </div>
       </div>
     </form>
@@ -115,43 +128,68 @@ export default class VendingMachine extends Vue {
   isProductIdValid = true;
   wasBuyButtonClicked = false;
 
-  set setBoughtProductStatusMsg(statusMsg: I.StatusMsg) {
-    this.returnedStatusMsg = { ...statusMsg };
+  // set BoughtProductStatusMsg(statusMsg: I.StatusMsg) {
+  //   this.returnedStatusMsg = { ...statusMsg };
+  // }
+
+  set WasBuyButtonClicked(value: boolean) {
+    this.wasBuyButtonClicked = value;
   }
 
-  get getBoughtProductStatusMsg(): I.StatusMsg {
+  get WasBuyButtonClicked(): boolean {
+    return this.wasBuyButtonClicked;
+  }
+
+  set IsProductIdValid(value: boolean) {
+    this.isProductIdValid = value;
+  }
+
+  get IsProductIdValid(): boolean {
+    return this.isProductIdValid;
+  }
+
+  get BoughtProductStatusMsg(): I.StatusMsg {
     return this.returnedStatusMsg;
   }
 
-  get getHasBoughtErrored(): boolean {
+  get HasBoughtErrored(): boolean {
     return VendingMachineStore.getHasBoughtErrored;
   }
 
-  get getBuyErrorMessage(): string {
+  get BuyNetworkError(): boolean {
+    return VendingMachineStore.getBuyNetworkError;
+  }
+
+  get BuyNetworkErrorMsg(): string {
+    return VendingMachineStore.getBuyNetworkErrorMsg;
+  }
+
+  get BuyErrorMessage(): I.StatusMsg {
     return VendingMachineStore.getBuyErrorMessage;
   }
 
-  get getPurchasedProductName(): string {
-    return VendingMachineStore.getBoughtProduct.products[0].productName;
+  get PurchasedProductName(): string {
+    // return "";
+    return VendingMachineStore.getProcessedOrder.products[0].productName;
   }
 
-  get wasPurchaseSuccessful(): boolean {
+  get WasPurchaseSuccessful(): boolean {
     if (!VendingMachineStore.getHasBoughtErrored) {
       return VendingMachineStore.getBuySuccessMessage.status === "SUCCESS";
     }
     return false;
   }
 
-  get getWasBuyButtonClicked(): boolean {
-    return this.wasBuyButtonClicked;
-  }
+  // get WasBuyButtonClicked(): boolean {
+  //   return this.wasBuyButtonClicked;
+  // }
 
-  set setWasBuyButtonClicked(wasBuyButtonClicked: boolean) {
-    this.wasBuyButtonClicked = wasBuyButtonClicked;
-  }
+  // set WasBuyButtonClicked(wasBuyButtonClicked: boolean) {
+  //   this.wasBuyButtonClicked = wasBuyButtonClicked;
+  // }
 
   created(): void {
-    console.log("wasBuyButtonClicked: " + this.getWasBuyButtonClicked);
+    console.log("wasBuyButtonClicked: " + this.wasBuyButtonClicked);
   }
 
   callPurchase(): void {
@@ -161,15 +199,18 @@ export default class VendingMachine extends Vue {
     // User inputs product id, remaining fields are fetched from store
     // Error is signaled if product id is not found or there are multiple
     // entrie of it
-    const matchingProductsInVendingMachine: Array<I.Product> = VendingMachineStore.getProductsGetter.filter(
-      (prod) => prod.id === this.productId
-    );
+    const matchingProductsInVendingMachine: Array<I.Product> =
+      VendingMachineStore.getProductsGetter.filter(
+        (prod) => prod.id === this.productId
+      );
 
     if (
       matchingProductsInVendingMachine.length === 0 ||
       matchingProductsInVendingMachine.length > 1
     ) {
-      this.isProductIdValid = false;
+      this.IsProductIdValid = false;
+      this.WasBuyButtonClicked = true;
+      console.log("this.isProductIdValid: " + this.isProductIdValid);
       return;
     }
 
@@ -199,18 +240,14 @@ export default class VendingMachine extends Vue {
 
     VendingMachineStore.buyProduct(purchaseOrder)
       .then(() => {
-        console.log("Purchase successful!");
-        console.log(
-          "Success; wasBuyButtonClicked: " + this.getWasBuyButtonClicked
-        );
-        this.setWasBuyButtonClicked;
+        console.log("Check if purchase is successful");
+
+        this.WasBuyButtonClicked = true;
       })
       .catch((error) => {
         console.log("Failed to purchase product; error: " + error);
-        console.log(
-          "Failed; wasBuyButtonClicked: " + this.getWasBuyButtonClicked
-        );
-        this.setWasBuyButtonClicked;
+        console.log("Failed; wasBuyButtonClicked: " + this.WasBuyButtonClicked);
+        this.WasBuyButtonClicked = true;
       });
   }
 }

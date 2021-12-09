@@ -60,7 +60,7 @@ export default {
         return axiosApi.post<I.Deposit>('/deposit/', requestConfig);
     },
     buy(order: I.Order): Promise<AxiosResponse<I.ProcessedOrder>> {
-        return axiosApi.post<I.ProcessedOrder>('/buy/', order);
+        return axiosApi.post<I.ProcessedOrder>('/product/buy/', order);
     },
     reset(requestConfig: AxiosRequestConfig): Promise<AxiosResponse<I.StatusMsg>> {
         return axiosApi.get('/reset/', requestConfig);

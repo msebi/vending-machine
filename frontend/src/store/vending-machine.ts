@@ -3,6 +3,7 @@ import { modulesStore } from "./store"
 import * as I from './types'
 import api, { axiosApi } from '../api/backend-api'
 import { AxiosRequestConfig } from "axios";
+import { textChangeRangeIsUnchanged } from "typescript";
 
 @Module
 class VendingMachineModule extends VuexModule {
@@ -25,7 +26,12 @@ class VendingMachineModule extends VuexModule {
         status: ""
     };
     buyError = false;
-    buyErrorMsg = "";
+    buyNetworkError = false;
+    buyErrorMsg: I.StatusMsg = {
+        msg: "",
+        status: ""
+    };
+    buyNetworkErrorMsg = "";
 
     userEmail = "";
     userPass = "";
@@ -91,19 +97,42 @@ class VendingMachineModule extends VuexModule {
         return this.productsInVendingMachine;
     }
 
+    get getBuyNetworkError() {
+        return this.buyNetworkError;
+    }
+
+    get getBuyNetworkErrorMsg() {
+        return this.buyNetworkErrorMsg;
+    }
+
+    @Mutation
+    has_bought_errored(value: boolean) {
+        this.buyError = value;
+    }
+
     get getHasBoughtErrored() {
         return this.buyError;
+    }
+
+    @Mutation
+    buy_error_msg(msg: I.StatusMsg) {
+        this.buyErrorMsg = { ...msg };
     }
 
     get getBuyErrorMessage() {
         return this.buyErrorMsg;
     }
 
+    @Mutation
+    buy_success_msg(msg: I.StatusMsg) {
+        this.buySuccessMsg = { ...msg };
+    }
+
     get getBuySuccessMessage() {
         return this.buySuccessMsg;
     }
 
-    get getBoughtProduct() {
+    get getProcessedOrder() {
         return this.processedOrder;
     }
 
@@ -173,9 +202,10 @@ class VendingMachineModule extends VuexModule {
     }
 
     @Mutation
-    buy_error(buyErrorMsg: string) {
-        this.buyError = true;
-        this.buyErrorMsg = buyErrorMsg;
+    buy_network_error(buyNetworkErrorMsg: string) {
+        this.buyNetworkError = true;
+        this.buyNetworkErrorMsg = buyNetworkErrorMsg;
+        this.buyError = false;
         this.buySuccess = false;
     }
 
@@ -187,7 +217,6 @@ class VendingMachineModule extends VuexModule {
     @Mutation
     set_bought_products(order: I.ProcessedOrder) {
         this.processedOrder = { ...order };
-        this.buy_success(order.statusMsg);
     }
 
     @Action
@@ -328,8 +357,25 @@ class VendingMachineModule extends VuexModule {
             api.buy(order)
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
-                    if (response.status == 200) {
-                        console.log("Bought product");
+                    if (response.status == 201) {
+                        console.log("Received purchase response; checking if purchase succeeded");
+                        console.log("Response data: " + JSON.stringify(response.data));
+                        if (response.data.statusMsg.status === "FAILED") {
+                            console.log("Purchase failed");
+                            this.has_bought_errored(true);
+                            console.log("status msg: " + JSON.stringify(response.data.statusMsg));
+                            this.buy_error_msg(response.data.statusMsg);
+                            this.buy_success_msg({ msg: "", status: "" });
+                            console.log("Purchase failed end if");
+                        }
+                        if (response.data.statusMsg.status === "SUCCESS") {
+                            console.log("Purchase success");
+                            this.has_bought_errored(false);
+                            this.buy_error_msg({ msg: "", status: "" });
+                            console.log("status msg: " + JSON.stringify(response.data.statusMsg));
+                            this.buy_success_msg(response.data.statusMsg);
+                            console.log("Purchase success end if");
+                        }
                         // place the registerSuccess state into our vuex store
                         this.set_bought_products(response.data);
                     }
@@ -338,7 +384,7 @@ class VendingMachineModule extends VuexModule {
                 .catch(error => {
                     console.log("Error: " + error);
                     // place the registerError state into our vuex store
-                    this.buy_error(error);
+                    this.buy_network_error(error);
                     reject("Couldn't buy product!")
                 });
         });
