@@ -65,6 +65,12 @@ export default class VendingMachine extends Vue {
   }
 
   created(): void {
+    // Initialize access token first
+    if (
+      VendingMachineStore.getAccessToken &&
+      VendingMachineStore.getAccessToken.length > 0
+    )
+      VendingMachineStore.set_access_token(VendingMachineStore.getAccessToken);
     VendingMachineStore.getProductsAction()
       .then(() => {
         this.products = VendingMachineStore.getProductsGetter;

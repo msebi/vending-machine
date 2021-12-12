@@ -223,6 +223,7 @@ export default class VendingMachine extends Vue {
       productQty: 1,
     };
     productsToPurchase.push(productToPurchase);
+
     const deposit: I.Deposit = {
       5: this.coin5Cents,
       10: this.coin10Cents,
@@ -241,6 +242,32 @@ export default class VendingMachine extends Vue {
     VendingMachineStore.buyProduct(purchaseOrder)
       .then(() => {
         console.log("Check if purchase is successful");
+        if (!VendingMachineStore.getHasBoughtErrored) {
+          console.log(
+            "Processed order " +
+              JSON.stringify(VendingMachineStore.getProcessedOrder)
+          );
+          if (VendingMachineStore.getProcessedOrder.deposit["5"] !== 0)
+            this.coin5Cents =
+              VendingMachineStore.getProcessedOrder.deposit["5"];
+          else this.coin5Cents = 0;
+          if (VendingMachineStore.getProcessedOrder.deposit["10"] !== 0)
+            this.coin10Cents =
+              VendingMachineStore.getProcessedOrder.deposit["10"];
+          else this.coin10Cents = 0;
+          if (VendingMachineStore.getProcessedOrder.deposit["20"] !== 0)
+            this.coin20Cents =
+              VendingMachineStore.getProcessedOrder.deposit["20"];
+          else this.coin20Cents = 0;
+          if (VendingMachineStore.getProcessedOrder.deposit["50"] !== 0)
+            this.coin50Cents =
+              VendingMachineStore.getProcessedOrder.deposit["50"];
+          else this.coin50Cents = 0;
+          if (VendingMachineStore.getProcessedOrder.deposit["100"] !== 0)
+            this.coin100Cents =
+              VendingMachineStore.getProcessedOrder.deposit["100"];
+          else this.coin100Cents = 0;
+        }
 
         this.WasBuyButtonClicked = true;
       })

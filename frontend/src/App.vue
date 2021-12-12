@@ -16,19 +16,20 @@
 </template>
 
 <script lang="ts">
-import VendingMachine from "./store/vending-machine";
+import VendingMachineStore from "./store/vending-machine";
 import router from "./router/index";
 
 export default {
   computed: {
     isAuthenticated(): boolean {
-      if (VendingMachine.getIsLoggedIn) return true;
+      console.log("App.vue: " + VendingMachineStore.getIsLoggedIn);
+      if (VendingMachineStore.getIsLoggedIn) return true;
       return false;
     },
   },
   methods: {
     onClickLogout(): void {
-      VendingMachine.logout().then(() => router.push("/"));
+      VendingMachineStore.logout().then(() => router.push("/"));
     },
   },
 };

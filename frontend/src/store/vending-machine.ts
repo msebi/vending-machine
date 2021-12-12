@@ -3,7 +3,7 @@ import { modulesStore } from "./store"
 import * as I from './types'
 import api, { axiosApi } from '../api/backend-api'
 import { AxiosRequestConfig } from "axios";
-import { textChangeRangeIsUnchanged } from "typescript";
+// import { textChangeRangeIsUnchanged } from "typescript";
 
 @Module
 class VendingMachineModule extends VuexModule {
@@ -64,8 +64,9 @@ class VendingMachineModule extends VuexModule {
     };
 
     get getIsLoggedIn(): boolean {
-        console.log("isLoggedIn " + !this.accessToken && this.accessToken.length === 0);
-        if (!this.accessToken && this.accessToken.length === 0) return false;
+        console.log("isLoggedIn " + !localStorage.accessToken || localStorage.accessToken.length === 0);
+        console.log("this.accessToken: " + localStorage.accessToken);
+        if (!localStorage.accessToken || localStorage.accessToken.length === 0) return false;
         return true;
     }
 
@@ -151,6 +152,11 @@ class VendingMachineModule extends VuexModule {
         this.buyError = false;
         this.accessToken = payload.accessToken;
         localStorage.accessToken = payload.accessToken;
+    }
+
+    @Mutation
+    set_access_token(accessToken: string) {
+        axiosApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     }
 
     @Mutation
