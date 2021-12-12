@@ -9,7 +9,6 @@
       Vending Machine
     </router-link>
 
-    <!-- <router-link to="/vending-machine">Vending Machine</router-link> | -->
     <!-- <router-link to="/protected">Protected</router-link> -->
   </div>
   <router-view />
@@ -18,21 +17,21 @@
 <script lang="ts">
 import VendingMachineStore from "./store/vending-machine";
 import router from "./router/index";
+import { Options, Vue } from "vue-class-component";
 
-export default {
-  computed: {
-    isAuthenticated(): boolean {
-      console.log("App.vue: " + VendingMachineStore.getIsLoggedIn);
-      if (VendingMachineStore.getIsLoggedIn) return true;
-      return false;
-    },
-  },
-  methods: {
-    onClickLogout(): void {
-      VendingMachineStore.logout().then(() => router.push("/"));
-    },
-  },
-};
+@Options({
+  name: "App",
+})
+export default class App extends Vue {
+  get isAuthenticated(): boolean {
+    console.log("App.vue getter: " + VendingMachineStore.getIsLoggedIn);
+    return VendingMachineStore.getIsLoggedIn;
+  }
+
+  onClickLogout(): void {
+    VendingMachineStore.logout().then(() => router.push("/"));
+  }
+}
 </script>
 
 <style lang="scss">

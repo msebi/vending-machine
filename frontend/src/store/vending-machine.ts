@@ -6,7 +6,7 @@ import { AxiosRequestConfig } from "axios";
 // import { textChangeRangeIsUnchanged } from "typescript";
 
 @Module
-class VendingMachineModule extends VuexModule {
+class VendingMachineStoreModule extends VuexModule {
     loginSuccess = false;
     loginError = false;
     loginErrorMsg = "";
@@ -64,9 +64,10 @@ class VendingMachineModule extends VuexModule {
     };
 
     get getIsLoggedIn(): boolean {
-        console.log("isLoggedIn " + !localStorage.accessToken || localStorage.accessToken.length === 0);
-        console.log("this.accessToken: " + localStorage.accessToken);
-        if (!localStorage.accessToken || localStorage.accessToken.length === 0) return false;
+        console.log("isLoggedIn this.accessToken: " + this.accessToken);
+        if (typeof this.accessToken === 'undefined') return false;
+        if (this.accessToken.length === 0) return false;
+        if (!this.accessToken && this.accessToken.length === 0) return false;
         return true;
     }
 
@@ -147,15 +148,23 @@ class VendingMachineModule extends VuexModule {
 
     @Mutation
     login_success(payload: I.CredentialsLoginObject) {
+        console.log("NOT GETTING HERE");
         this.loginSuccess = true;
         this.loginError = false;
         this.buyError = false;
         this.accessToken = payload.accessToken;
         localStorage.accessToken = payload.accessToken;
+        console.log("Access token set: " + localStorage.accessToken);
     }
 
     @Mutation
-    set_access_token(accessToken: string) {
+    set_init_access_token(accessToken: string): void {
+        console.log("Setting access token: " + accessToken);
+        this.accessToken = accessToken;
+    }
+
+    @Mutation
+    set_bearer_access_token(accessToken: string): void {
         axiosApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     }
 
@@ -172,7 +181,8 @@ class VendingMachineModule extends VuexModule {
         this.accessToken = "";
         this.logoutSuccess = true;
         this.logoutError = false;
-        delete localStorage.accessToken;
+        localStorage.removeItem("accessToken");
+        axiosApi.defaults.headers.common['Authorization'] = undefined;
     }
 
     @Mutation
@@ -185,6 +195,8 @@ class VendingMachineModule extends VuexModule {
         this.logoutError = true;
         this.logoutSuccess = false;
         this.loginErrorMsg = logoutErrorMsg;
+        localStorage.removeItem("accessToken");
+        axiosApi.defaults.headers.common['Authorization'] = undefined;
     }
 
     @Mutation
@@ -296,7 +308,6 @@ class VendingMachineModule extends VuexModule {
             api.logout().then(response => {
                 console.log("Server response: " + response.data + " Statuscode: " + response.status);
                 if (response.status == 200) {
-                    axiosApi.defaults.headers.common['Authorization'] = undefined;
                     this.logout_success();
                 }
                 resolve(response);
@@ -404,7 +415,7 @@ class VendingMachineModule extends VuexModule {
                 .then(response => {
                     console.log("Response: '" + response.data + "' with Statuscode " + response.status);
                     if (response.status == 200) {
-                        console.log("Got hello");
+                        console.log("Got hello!");
                     }
                     resolve(response)
                 })
@@ -419,4 +430,4 @@ class VendingMachineModule extends VuexModule {
 }
 
 // Register the module and Create a proxy to it
-export default new VendingMachineModule({ store: modulesStore, name: "vending-machine-store" })
+export default new VendingMachineStoreModule({ store: modulesStore, name: "vending-machine-store" })
