@@ -188,10 +188,6 @@ export default class VendingMachine extends Vue {
   //   this.wasBuyButtonClicked = wasBuyButtonClicked;
   // }
 
-  created(): void {
-    console.log("wasBuyButtonClicked: " + this.wasBuyButtonClicked);
-  }
-
   callPurchase(): void {
     console.log("Purchasing product with id: " + this.productId);
 
@@ -247,6 +243,7 @@ export default class VendingMachine extends Vue {
             "Processed order " +
               JSON.stringify(VendingMachineStore.getProcessedOrder)
           );
+          // Place change in deposit slot
           if (VendingMachineStore.getProcessedOrder.deposit["5"] !== 0)
             this.coin5Cents =
               VendingMachineStore.getProcessedOrder.deposit["5"];

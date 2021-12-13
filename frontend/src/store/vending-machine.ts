@@ -237,6 +237,12 @@ class VendingMachineStoreModule extends VuexModule {
         this.processedOrder = { ...order };
     }
 
+    @Mutation
+    remove_bought_products(products: Array<I.Product>) {
+        this.productsInVendingMachine = this.productsInVendingMachine.filter((product) =>
+            products.includes(product));
+    }
+
     @Action
     async login(loginObject: I.CredentialsLoginObject) {
         return new Promise((resolve, reject) => {
@@ -391,6 +397,7 @@ class VendingMachineStoreModule extends VuexModule {
                             this.buy_error_msg({ msg: "", status: "" });
                             console.log("status msg: " + JSON.stringify(response.data.statusMsg));
                             this.buy_success_msg(response.data.statusMsg);
+                            this.remove_bought_products(response.data.products);
                             console.log("Purchase success end if");
                         }
                         // place the registerSuccess state into our vuex store
