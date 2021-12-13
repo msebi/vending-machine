@@ -1,7 +1,5 @@
 package de.jonashackt.springbootvuejs.controller;
 
-import de.jonashackt.springbootvuejs.SpringBootVuejsApplication;
-import de.jonashackt.springbootvuejs.domain.User;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
@@ -10,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import de.jonashackt.vendingmachine.SpringBootVuejsApplication;
+import de.jonashackt.vendingmachine.domain.User;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;

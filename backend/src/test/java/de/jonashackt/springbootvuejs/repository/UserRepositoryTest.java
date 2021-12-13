@@ -1,11 +1,13 @@
 package de.jonashackt.springbootvuejs.repository;
 
-import de.jonashackt.springbootvuejs.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import de.jonashackt.vendingmachine.domain.User;
+import de.jonashackt.vendingmachine.repository.UserRepository;
 
 import java.util.List;
 
@@ -38,7 +40,6 @@ public class UserRepositoryTest {
 
         assertThat(usersWithLastNameSiegmund, contains(norbertSiegmund));
     }
-
 
     @Test
     public void testFindByFirstName() throws Exception {
