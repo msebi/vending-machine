@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.authentication.server.configuration.properties;
+package mvp.match.vendingmachine.authentication.server.configuration.properties;
 
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;

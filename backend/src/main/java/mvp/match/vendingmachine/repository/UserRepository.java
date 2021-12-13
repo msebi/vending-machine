@@ -1,8 +1,8 @@
-package de.jonashackt.vendingmachine.repository;
+package mvp.match.vendingmachine.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import de.jonashackt.vendingmachine.domain.User;
+import mvp.match.vendingmachine.domain.User;
 
 import java.util.List;
 

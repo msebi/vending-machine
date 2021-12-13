@@ -6,8 +6,8 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>de.jonashackt</groupId>
-		<artifactId>spring-boot-vuejs</artifactId>
+		<groupId>mvp.match</groupId>
+		<artifactId>vendingmachine</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 

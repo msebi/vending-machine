@@ -1,6 +1,7 @@
-package de.jonashackt.vendingmachine.authentication.server.configuration;
+package mvp.match.vendingmachine.authentication.server.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,8 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountService;
-import de.jonashackt.vendingmachine.authentication.server.configuration.properties.AppProperties;
+import mvp.match.vendingmachine.authentication.server.configuration.properties.AppProperties;
 
 @Slf4j
 @Configuration

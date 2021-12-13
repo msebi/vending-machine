@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.configuration;
+package mvp.match.vendingmachine.configuration;
 // package de.jonashackt.springbootvuejs.configuration;
 
 // import org.springframework.context.annotation.Configuration;

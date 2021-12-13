@@ -1,8 +1,13 @@
-package de.jonashackt.vendingmachine.authentication.server.configuration;
+package mvp.match.vendingmachine.authentication.server.configuration;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import mvp.match.vendingmachine.authentication.server.accounts.Account;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountRepository;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountRole;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,11 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import de.jonashackt.vendingmachine.authentication.server.accounts.Account;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountRepository;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountRole;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountService;
-import de.jonashackt.vendingmachine.authentication.server.configuration.properties.AppProperties;
+import mvp.match.vendingmachine.authentication.server.configuration.properties.AppProperties;
 
 @Configuration
 public class AppConfiguration {

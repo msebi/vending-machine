@@ -1,21 +1,15 @@
 package de.jonashackt.springbootvuejs.controller;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import de.jonashackt.vendingmachine.SpringBootVuejsApplication;
-import de.jonashackt.vendingmachine.domain.User;
+import mvp.match.vendingmachine.SpringBootVuejsApplication;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(classes = SpringBootVuejsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

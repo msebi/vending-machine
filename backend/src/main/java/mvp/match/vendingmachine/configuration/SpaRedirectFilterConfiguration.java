@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.configuration;
+package mvp.match.vendingmachine.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

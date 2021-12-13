@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.authentication.server.accounts;
+package mvp.match.vendingmachine.authentication.server.accounts;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

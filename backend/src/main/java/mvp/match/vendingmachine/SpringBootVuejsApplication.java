@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine;
+package mvp.match.vendingmachine;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.exception;
+package mvp.match.vendingmachine.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

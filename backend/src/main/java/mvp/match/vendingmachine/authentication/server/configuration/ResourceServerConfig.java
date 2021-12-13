@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.authentication.server.configuration;
+package mvp.match.vendingmachine.authentication.server.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

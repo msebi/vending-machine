@@ -1,8 +1,12 @@
-package de.jonashackt.vendingmachine.controller;
+package mvp.match.vendingmachine.controller;
 
+import mvp.match.vendingmachine.domain.Order;
+import mvp.match.vendingmachine.domain.Product;
+import mvp.match.vendingmachine.domain.StatusMsg;
+import mvp.match.vendingmachine.repository.CashRepository;
+import mvp.match.vendingmachine.repository.ProductRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,28 +19,18 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import de.jonashackt.vendingmachine.authentication.server.accounts.Account;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountNotFoundException;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountRepository;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountRole;
-import de.jonashackt.vendingmachine.authentication.server.accounts.AccountService;
-import de.jonashackt.vendingmachine.domain.Order;
-import de.jonashackt.vendingmachine.domain.Product;
-import de.jonashackt.vendingmachine.domain.StatusMsg;
-import de.jonashackt.vendingmachine.domain.User;
-import de.jonashackt.vendingmachine.exception.ProductNotFoundException;
-import de.jonashackt.vendingmachine.exception.UserNotFoundException;
-import de.jonashackt.vendingmachine.repository.CashRepository;
-import de.jonashackt.vendingmachine.repository.ProductRepository;
+import mvp.match.vendingmachine.authentication.server.accounts.Account;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountNotFoundException;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountRepository;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountRole;
+import mvp.match.vendingmachine.authentication.server.accounts.AccountService;
+import mvp.match.vendingmachine.exception.ProductNotFoundException;
 
 @Slf4j
 @Controller

@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.controller;
+package mvp.match.vendingmachine.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import de.jonashackt.vendingmachine.domain.Cash;
-import de.jonashackt.vendingmachine.domain.Order;
-import de.jonashackt.vendingmachine.domain.Product;
-import de.jonashackt.vendingmachine.domain.StatusMsg;
-import de.jonashackt.vendingmachine.exception.ProductNotFoundException;
-import de.jonashackt.vendingmachine.repository.CashRepository;
-import de.jonashackt.vendingmachine.repository.ProductRepository;
+import mvp.match.vendingmachine.domain.Cash;
+import mvp.match.vendingmachine.domain.Order;
+import mvp.match.vendingmachine.domain.Product;
+import mvp.match.vendingmachine.domain.StatusMsg;
+import mvp.match.vendingmachine.exception.ProductNotFoundException;
+import mvp.match.vendingmachine.repository.CashRepository;
+import mvp.match.vendingmachine.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

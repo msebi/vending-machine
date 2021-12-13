@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.authentication.server.accounts;
+package mvp.match.vendingmachine.authentication.server.accounts;
 
 import java.util.Collection;
 import java.util.Set;

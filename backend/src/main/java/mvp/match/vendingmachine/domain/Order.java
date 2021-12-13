@@ -1,4 +1,4 @@
-package de.jonashackt.vendingmachine.domain;
+package mvp.match.vendingmachine.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -3,13 +3,13 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.jonashackt</groupId>
-	<artifactId>spring-boot-vuejs</artifactId>
+	<groupId>mvp.match</groupId>
+	<artifactId>vendingmachine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>spring-boot-vuejs</name>
-	<description>Demo project for Spring Boot and Vue.js</description>
+	<name>vendingmachine</name>
+	<description>Vending Machine (springboot, vuejs, vuex)</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

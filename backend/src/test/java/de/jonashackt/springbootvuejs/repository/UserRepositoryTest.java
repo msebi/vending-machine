@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import de.jonashackt.vendingmachine.domain.User;
-import de.jonashackt.vendingmachine.repository.UserRepository;
+import mvp.match.vendingmachine.domain.User;
+import mvp.match.vendingmachine.repository.UserRepository;
 
 import java.util.List;
 
