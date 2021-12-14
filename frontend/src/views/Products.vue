@@ -1,8 +1,6 @@
 <template>
   <div class="col-6">
-    <h3 class="text-center">
-      Products:
-    </h3>
+    <h3 class="text-center">Products:</h3>
     <table class="table">
       <thead>
         <tr>
@@ -13,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.id">
+        <tr v-for="product in getProductsInVendingMachine" :key="product.id">
           <td>{{ product.id }}</td>
           <td>{{ product.productName }}</td>
           <td>{{ product.productPrice }}</td>
@@ -22,13 +20,6 @@
       </tbody>
     </table>
   </div>
-
-  <!-- <form @submit.prevent="callLogin()">
-    <input type="text" placeholder="username" v-model="user" />
-    <input type="password" placeholder="password" v-model="password" />
-    <button type="submit" class="btn btn-primary">Login</button>
-    <p v-if="error" class="error">Bad login information</p>
-  </form> -->
 </template>
 
 <script lang="ts">
@@ -40,6 +31,8 @@ import * as I from "../store/types";
   name: "Products",
 })
 export default class VendingMachine extends Vue {
-  products: Array<I.Product> = VendingMachineStore.getProductsGetter;
+  get getProductsInVendingMachine(): Array<I.Product> {
+    return VendingMachineStore.getProductsGetter;
+  }
 }
 </script>

@@ -148,23 +148,18 @@ class VendingMachineStoreModule extends VuexModule {
 
     @Mutation
     login_success(payload: I.CredentialsLoginObject) {
-        console.log("NOT GETTING HERE");
+        console.log("Setting access token (login): " + payload.accessToken);
         this.loginSuccess = true;
         this.loginError = false;
         this.buyError = false;
         this.accessToken = payload.accessToken;
         localStorage.accessToken = payload.accessToken;
-        console.log("Access token set: " + localStorage.accessToken);
     }
 
     @Mutation
     set_init_access_token(accessToken: string): void {
-        console.log("Setting access token: " + accessToken);
+        console.log("Setting access token (init): " + accessToken);
         this.accessToken = accessToken;
-    }
-
-    @Mutation
-    set_bearer_access_token(accessToken: string): void {
         axiosApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     }
 
@@ -238,9 +233,14 @@ class VendingMachineStoreModule extends VuexModule {
     }
 
     @Mutation
-    remove_bought_products(products: Array<I.Product>) {
-        this.productsInVendingMachine = this.productsInVendingMachine.filter((product) =>
-            products.includes(product));
+    remove_bought_products(productsToBeRemoved: Array<I.Product>) {
+        // console.log("prods to rem: " + JSON.stringify(productsToBeRemoved));
+        const tmpProductsInVendingMachine: Array<I.Product> = Object.values(this.productsInVendingMachine);
+        const reducedProductsInVendingMachine: Array<I.Product> =
+            tmpProductsInVendingMachine.reduce<Array<I.Product>>((tmpProductsInVendingMachine, { id, ...rest }) => ({ ...tmpProductsInVendingMachine, ...{ [id]: { id, ...rest } } }), []);
+        productsToBeRemoved.forEach(({ id }) => reducedProductsInVendingMachine[id].productQty--);
+        this.productsInVendingMachine = Object.values(reducedProductsInVendingMachine);
+        console.log("productsInVendingMachine: " + JSON.stringify(this.productsInVendingMachine));
     }
 
     @Action
@@ -365,7 +365,7 @@ class VendingMachineStoreModule extends VuexModule {
                     resolve(response)
                 })
                 .catch(error => {
-                    console.log("Error: " + error);
+                    console.log("Couldn't get products; error: " + error);
                     // place the registerError state into our vuex store
                     this.register_error(error);
                     reject("Couldn't get products!");

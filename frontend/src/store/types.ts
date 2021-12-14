@@ -38,7 +38,7 @@ export interface User {
 
 // Snack to be added/bought to the vending machine
 export interface Product {
-    id?: number;
+    id: number;
     productName: string;
     productPrice: number;
     productQty: number;
