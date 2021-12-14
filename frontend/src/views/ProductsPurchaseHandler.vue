@@ -169,8 +169,11 @@ export default class VendingMachine extends Vue {
   }
 
   get PurchasedProductName(): string {
-    // return "";
-    return VendingMachineStore.getProcessedOrder.products[0].productName;
+    return (
+      VendingMachineStore.getProcessedOrder.products.find(
+        (prod) => this.productId === prod.id
+      ) as I.Product
+    ).productName;
   }
 
   get WasPurchaseSuccessful(): boolean {
@@ -206,16 +209,21 @@ export default class VendingMachine extends Vue {
     ) {
       this.IsProductIdValid = false;
       this.WasBuyButtonClicked = true;
-      console.log("this.isProductIdValid: " + this.isProductIdValid);
+      console.log("this.isProductIdValid: " + this.IsProductIdValid);
       return;
     }
 
     this.isProductIdValid = true;
 
+    const matchingProductInVendingMachine =
+      VendingMachineStore.getProductsGetter.find(
+        (prod) => prod.id === this.productId
+      );
+
     const productToPurchase: I.Product = {
       id: this.productId,
-      productName: matchingProductsInVendingMachine[0].productName,
-      productPrice: matchingProductsInVendingMachine[0].productPrice,
+      productName: (matchingProductInVendingMachine as I.Product).productName,
+      productPrice: (matchingProductInVendingMachine as I.Product).productPrice,
       productQty: 1,
     };
     productsToPurchase.push(productToPurchase);
